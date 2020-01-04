@@ -1,0 +1,9 @@
+[submodule "external_libs/source/pmgui"]
+	path = external_libs/source/pmgui
+	url = https://github.com/SSBMTonberry/pmgui.git
+[submodule "external_libs/source/sfml"]
+	path = external_libs/source/sfml
+	url = https://github.com/SSBMTonberry/SFML.git
+[submodule "external_libs/source/caudio"]
+	path = external_libs/source/caudio
+	url = https://github.com/SSBMTonberry/cAudio.git
