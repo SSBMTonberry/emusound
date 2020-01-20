@@ -61,10 +61,15 @@ configure_file (
         "${PROJECT_SOURCE_DIR}/EmusoundConfig.h"
 )
 
+#configure_file(
+#        "${PROJECT_SOURCE_DIR}/external_libs/source/caudio/CMake/Templates/cAudioBuildSettings.h.in"
+#        "${PROJECT_SOURCE_DIR}/external_libs/source/caudio/cAudio/include/cAudioBuildSettings.h"
+#)
+
 set(SOURCE_FILES main.cpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/external_libs/include/ ${PROJECT_SOURCE_DIR}/external_libs/source/)
-add_library(emusound ${SOURCE_FILES})
-target_link_libraries(emusound cAudio ${SOURCE_FILES})
+add_library(emusound STATIC ${SOURCE_FILES})
+target_link_libraries(emusound ${SOURCE_FILES})
 
 add_subdirectory(demo)
