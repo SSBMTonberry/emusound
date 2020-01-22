@@ -9,17 +9,12 @@
 class EmuAudioSource : public SoLoud::AudioSourceInstance
 {
     public:
+        EmuAudioSource();
 
-
-    private:
         unsigned int getAudio(float *aBuffer, unsigned int aSamplesToRead, unsigned int aBufferSize) override;
-
         bool hasEnded() override;
-
         SoLoud::result seek(SoLoud::time aSeconds, float *mScratch, unsigned int mScratchSize) override;
-
         SoLoud::result rewind() override;
-
         float getInfo(unsigned int aInfoKey) override;
 };
 

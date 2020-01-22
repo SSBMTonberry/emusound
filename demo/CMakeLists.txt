@@ -6,4 +6,6 @@ set(SOURCE_FILES main.cpp EmuAudioSource.cpp EmuAudioSource.h)
 
 add_executable(emusound_demo ${SOURCE_FILES})
 
+#message("Brolo: ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a")
+
 target_link_libraries(emusound_demo ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a pthread asound)

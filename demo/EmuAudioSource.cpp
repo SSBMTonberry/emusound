@@ -4,6 +4,11 @@
 
 #include "EmuAudioSource.h"
 
+EmuAudioSource::EmuAudioSource() : SoLoud::AudioSourceInstance()
+{
+
+}
+
 unsigned int EmuAudioSource::getAudio(float *aBuffer, unsigned int aSamplesToRead, unsigned int aBufferSize)
 {
     return 0;

@@ -44,6 +44,9 @@ elseif(WIN32)
     endif()
 endif()
 
+#SFML
+set(BUILD_SHARED_LIBS FALSE) #build SFML with static libs
+
 if(DEBUG)
     message("Adding debug submodules")
     add_subdirectory(${PROJECT_SOURCE_DIR}/external_libs/source/caudio ${PROJECT_SOURCE_DIR}/external_libs/source/caudio/cmake-build-debug)
