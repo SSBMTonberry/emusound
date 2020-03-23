@@ -35,5 +35,5 @@ include_directories(../external_libs/include ../external_libs/include/libgme)
 add_executable(emusound_demo ${SOURCE_FILES} ${GME_SOURCE_FILES})
 
 #message("Brolo: ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a")
-target_link_libraries(emusound_demo pthread dl)
+target_link_libraries(emusound_demo pthread asound dl)
 #target_link_libraries(emusound_demo ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a pthread asound dl)

@@ -8,3 +8,5 @@ cmake-build-release/
 .idea/
 
 EmusoundConfig.h
+
+cmake-build-minsizerel/

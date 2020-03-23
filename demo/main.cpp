@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <vector>
 
-std::vector<signed short> m_samples;
 std::string m_track_info;
 
 const long SAMPLE_RATE = 44100;
@@ -104,9 +103,6 @@ void initEmu(const std::string & filename)
         gme_free_info( info );
     }
 
-    size_t sampleSize = SAMPLE_RATE * 2;
-    m_samples.resize(sampleSize);
-
     //int i = 1;
     //size_t sampleSize = SAMPLE_RATE * 2;
     //m_samples.resize(sampleSize);
@@ -144,15 +140,24 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 {
     //ma_convert_pcm_frames_format()
-    m_emu->play(bytesToRead / 2, (short*) pBufferOut); //m_samples.size(), &m_samples[0]);
-    pBufferOut = &m_samples[0];
-    bytesToRead = m_samples.size();
+    size_t bufferSize = bytesToRead / 2;
+    m_emu->play(bufferSize, (short*) pBufferOut); //m_samples.size(), &m_samples[0]);
+    //pBufferOut = &m_samples[0];
+    //bytesToRead = m_samples.size();
+
+    return bufferSize;
+
+    //m_emu->play(bytesToRead / 2, (short*) pBufferOut);
+    //pBufferOut = &m_samples[0];
+    //bytesToRead = m_samples.size();
 }
 
 ma_bool32 onSeek(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
 {
     int toSeek = byteOffset / 4;
-    m_emu->seek(toSeek);
+    blargg_err_t error = m_emu->seek(toSeek);
+
+    return (error) ? false : true;
 }
 
 int example(int argc, char** argv)
@@ -217,7 +222,7 @@ int emuExample(int argc, char** argv)
 
     initEmu(argv[1]);
 
-    result = ma_decoder_init_raw(onRead, onSeek, &m_samples[0], &dec_config_in, &dec_config_out, &decoder);//ma_decoder_init_raw(argv[1], NULL, &decoder);
+    result = ma_decoder_init_raw(onRead, onSeek, &decoder, &dec_config_in, &dec_config_out, &decoder);//ma_decoder_init_raw(argv[1], NULL, &decoder);
 
     if (result != MA_SUCCESS) {
         return -2;
