@@ -27,6 +27,7 @@
 std::string m_track_info;
 
 const long SAMPLE_RATE = 44100;
+ma_lpf1 lowpass_filter;
 
 void handle_error( const char* str )
 {
@@ -137,19 +138,20 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
     (void)pInput;
 }
 
+std::vector<short> m_shorties;
 size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 {
-    //ma_convert_pcm_frames_format()
     size_t bufferSize = bytesToRead / 2;
-    m_emu->play(bufferSize, (short*) pBufferOut); //m_samples.size(), &m_samples[0]);
-    //pBufferOut = &m_samples[0];
-    //bytesToRead = m_samples.size();
+
+
+    m_emu->play(bufferSize, (short*) pBufferOut);
+    ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, pBufferOut, bufferSize);
+    //m_emu->play(bufferSize, &m_shorties[0]);//(short*) pBufferOut);
+    //ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, &m_shorties[0], bufferSize);
+
 
     return bufferSize;
 
-    //m_emu->play(bytesToRead / 2, (short*) pBufferOut);
-    //pBufferOut = &m_samples[0];
-    //bytesToRead = m_samples.size();
 }
 
 ma_bool32 onSeek(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
@@ -206,14 +208,27 @@ int example(int argc, char** argv)
     return 0;
 }
 
+ma_lpf1_config createLowPassFilter(double cutoffFrequency = 200)
+{
+    ma_lpf1_config config = ma_lpf1_config_init(ma_format_s16, 2, 44100, cutoffFrequency);
+
+    return config;
+}
+
 int emuExample(int argc, char** argv)
 {
+    m_shorties.reserve(44100);
     ma_result result;
     ma_decoder decoder;
     ma_decoder_config dec_config_in = ma_decoder_config_init(ma_format_s16, 2, 44100);
     ma_decoder_config dec_config_out = ma_decoder_config_init(ma_format_s16, 2, 44100);
     ma_device_config deviceConfig;
     ma_device device;
+
+
+    ma_lpf1_config lowpass_config = createLowPassFilter(512.0);
+    ma_result lowpass_result = ma_lpf1_init(&lowpass_config, &lowpass_filter);
+
 
     if (argc < 2) {
         printf("No input file.\n");
