@@ -43,7 +43,7 @@ Music_Emu* m_emu = nullptr;
 void initEmu(const std::string & filename)
 {
     //long sample_rate = SAMPLE_RATE; //44100 / 2; // number of samples per second
-    int track = 1; // index of track to play (0 = first)
+    int track = 6; // index of track to play (0 = first)
 
     // Determine file type
     gme_type_t file_type;
@@ -143,14 +143,16 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
 
 size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 {
-    m_emu->play(m_samples.size(), &m_samples[0]);
+    //ma_convert_pcm_frames_format()
+    m_emu->play(bytesToRead / 2, (short*) pBufferOut); //m_samples.size(), &m_samples[0]);
     pBufferOut = &m_samples[0];
     bytesToRead = m_samples.size();
 }
 
 ma_bool32 onSeek(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
 {
-
+    int toSeek = byteOffset / 4;
+    m_emu->seek(toSeek);
 }
 
 int example(int argc, char** argv)
@@ -199,7 +201,7 @@ int example(int argc, char** argv)
     return 0;
 }
 
-int main(int argc, char** argv)
+int emuExample(int argc, char** argv)
 {
     ma_result result;
     ma_decoder decoder;
@@ -221,14 +223,14 @@ int main(int argc, char** argv)
         return -2;
     }
 
-
-
     deviceConfig = ma_device_config_init(ma_device_type_playback);
     deviceConfig.playback.format   = decoder.outputFormat;
     deviceConfig.playback.channels = decoder.outputChannels;
     deviceConfig.sampleRate        = decoder.outputSampleRate;
     deviceConfig.dataCallback      = data_callback;
     deviceConfig.pUserData         = &decoder; //&m_samples[0];
+
+    ma_decoder_seek_to_pcm_frame(&decoder, 10000);
 
     if (ma_device_init(NULL, &deviceConfig, &device) != MA_SUCCESS) {
         printf("Failed to open playback device.\n");
@@ -252,4 +254,10 @@ int main(int argc, char** argv)
     delete m_emu;
 
     return 0;
+}
+
+int main(int argc, char** argv)
+{
+    //example(argc, argv);
+    emuExample(argc, argv);
 }
