@@ -95,7 +95,7 @@ set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp $
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2413_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_GENS.cpp
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_Nuked.cpp )
 
-set(SOURCE_FILES include/audio/IStream.h include/audio/IEmu.h include/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h include/audio/EmuStream.h)
+set(SOURCE_FILES include/audio/ISoundStream.h include/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h include/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp include/audio/EmuVoice.cpp include/audio/EmuVoice.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/)
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
