@@ -9,14 +9,39 @@
 #include "ISoundStream.h"
 #include "../data/EmuTrackInfo.h"
 #include "EmuVoice.h"
+#include "EmuConfig.hpp"
+#include <functional>
 
 namespace esnd
 {
+    class EmuConfig
+    {
+        public:
+            EmuConfig() = default;
+            EmuConfig(uint32_t channels, uint32_t sampleRate)
+            {
+                initialize(channels, sampleRate);
+            }
+
+            void initialize(uint32_t channels, uint32_t sampleRate)
+            {
+                dec_config_in = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
+                dec_config_out = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
+            }
+
+            ma_decoder decoder;
+            ma_decoder_config dec_config_in;
+            ma_decoder_config dec_config_out;
+            ma_device_config deviceConfig;
+            ma_device device;
+    };
+
     class EmuStream : public ISoundStream
     {
         public:
-            EmuStream(const std::string &filename, int track = 0, uint32_t channelCount = 2, uint32_t sampleRate = 44100);
-            EmuStream(void *data, size_t size, int track = 0, uint32_t channelCount = 2, uint32_t sampleRate = 44100);
+            EmuStream();
+            EmuStream(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            EmuStream(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
 
             void muteChannel(int channelNo, bool mute);
 
@@ -53,8 +78,11 @@ namespace esnd
             bool isValid() const;
 
             //Overridden
-            void loadFromFile(const std::string &filename, uint32_t channelCount = 2, uint32_t sampleRate = 44100) override;
-            void loadFromMemory(void *data, size_t size, uint32_t channelCount = 2, uint32_t sampleRate = 44100) override;
+            void loadFromFile(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            void loadFromMemory(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+
+            void loadFromFile(const std::string &filename, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
+            void loadFromMemory(void *data, size_t size, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
 
             void play() override;
             void pause() override;
@@ -67,8 +95,11 @@ namespace esnd
             [[nodiscard]] uint32_t getSampleRate() const override;
 
         protected:
+            void initialize();
+
             size_t onRead(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead) override;
             ma_bool32 onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin) override;
+            void onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount) override;
 
             std::vector<short> m_samples;
             std::mutex m_mutex; //Mutex for thread protection
@@ -77,7 +108,7 @@ namespace esnd
              *  also get worse quality on the sound. */
             uint32_t m_sampleRate;
 
-            uint32_t m_channelCount;
+            uint32_t m_channels;
             /*! The emulator for the sound*/
             Music_Emu *m_emu = nullptr;
             /*! The track loaded. 0 is the first track */
@@ -100,6 +131,10 @@ namespace esnd
             EmuTrackInfo m_emptyTrack; //When no track info exists
             std::vector<EmuTrackInfo> m_tracks;
             SoundStatus m_status;
+            StreamMode m_loadMode;
+
+            EmuConfig m_config;
+            ma_result m_decoderInitStatus;
     };
 }
 
