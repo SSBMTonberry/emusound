@@ -15,14 +15,16 @@
 
 //#define DR_WAV_IMPLEMENTATION
 //#include "dr_wav.h"
-#define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h"
+//#define MINIAUDIO_IMPLEMENTATION
+//#include "miniaudio.h"
 
 #include "libgme/gme.h"
 #include "libgme/Music_Emu.h"
 
 #include <stdio.h>
 #include <vector>
+#define MINIAUDIO_IMPLEMENTATION
+#include "../include/audio/EmuStream.h"
 
 std::string m_track_info;
 
@@ -276,8 +278,23 @@ int emuExample(int argc, char** argv)
     return 0;
 }
 
+int emusoundExample(int argc, char** argv)
+{
+
+    //initEmu(argv[1]);
+    esnd::EmuStream emuStream;
+    esnd::StreamLoadStatus status = emuStream.loadFromFile(argv[1], 6);
+    emuStream.play();
+
+    printf("Press Enter to quit...");
+    getchar();
+
+    return 0;
+}
+
 int main(int argc, char** argv)
 {
-    //example(argc, argv);
-    emuExample(argc, argv);
+    //return example(argc, argv);
+    //return emuExample(argc, argv);
+    return emusoundExample(argc, argv);
 }

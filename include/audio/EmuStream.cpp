@@ -17,7 +17,8 @@ void esnd::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput,
     if(stream == nullptr)
         return;
 
-    stream->onGetData(pDevice, pOutput, pInput, frameCount);
+    if(stream->getStatus() == esnd::SoundStatus::Playing)
+        stream->onGetData(pDevice, pOutput, pInput, frameCount);
 }
 
 size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
@@ -27,7 +28,8 @@ size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytes
     if(stream == nullptr)
         return 0;
 
-    return stream->onRead(pDecoder, pBufferOut, bytesToRead);
+    if(stream->getStatus() == esnd::SoundStatus::Playing)
+        return stream->onRead(pDecoder, pBufferOut, bytesToRead);
 }
 
 ma_bool32 esnd::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
@@ -348,35 +350,35 @@ bool esnd::EmuStream::isValid() const
 
 //Overridden
 
-void esnd::EmuStream::loadFromFile(const std::string &filename, int track, uint32_t channels, uint32_t sampleRate)
+esnd::StreamLoadStatus esnd::EmuStream::loadFromFile(const std::string &filename, int track, uint32_t channels, uint32_t sampleRate)
 {
     m_track = track;
-    loadFromFile(filename, channels, sampleRate);
+    return loadFromFile(filename, channels, sampleRate);
 }
 
-void esnd::EmuStream::loadFromMemory(void *data, size_t size, int track, uint32_t channels, uint32_t sampleRate)
+esnd::StreamLoadStatus esnd::EmuStream::loadFromMemory(void *data, size_t size, int track, uint32_t channels, uint32_t sampleRate)
 {
     m_track = track;
-    loadFromMemory(data, size, channels, sampleRate);
+    return loadFromMemory(data, size, channels, sampleRate);
 }
 
-void esnd::EmuStream::loadFromFile(const std::string &filename, uint32_t channels, uint32_t sampleRate)
+esnd::StreamLoadStatus esnd::EmuStream::loadFromFile(const std::string &filename, uint32_t channels, uint32_t sampleRate)
 {
     m_loadMode = StreamMode::File;
     m_filename = filename;
     m_channels = channels;
     m_sampleRate = sampleRate;
-    initialize();
+    return initialize();
 }
 
-void esnd::EmuStream::loadFromMemory(void *data, size_t size, uint32_t channels, uint32_t sampleRate)
+esnd::StreamLoadStatus esnd::EmuStream::loadFromMemory(void *data, size_t size, uint32_t channels, uint32_t sampleRate)
 {
     m_loadMode = StreamMode::Memory;
     m_data = data;
     m_dataSize = size;
     m_channels = channels;
     m_sampleRate = sampleRate;
-    initialize();
+    return initialize();
 }
 
 void esnd::EmuStream::play()
@@ -401,7 +403,7 @@ void esnd::EmuStream::seek(int offset)
 
 esnd::SoundStatus esnd::EmuStream::getStatus() const
 {
-    return SoundStatus::Stopped;
+    return m_status;
 }
 
 size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead)
@@ -409,7 +411,6 @@ size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t by
     size_t bufferSize = bytesToRead / 2;
 
     m_emu->play(bufferSize, (short*) pBufferOut);
-    //ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, pBufferOut, bufferSize);
 
     return bufferSize;
 }

@@ -5,10 +5,6 @@
 #ifndef EMUSOUND_ISOUNDSTREAM_H
 #define EMUSOUND_ISOUNDSTREAM_H
 
-
-#define MINIAUDIO_IMPLEMENTATION
-#include "miniaudio.h"
-
 #include "libgme/gme.h"
 #include "libgme/Music_Emu.h"
 
@@ -17,6 +13,7 @@
 #include <string>
 
 #include "Enums.hpp"
+#include "../external/emusound_external.h"
 
 namespace esnd
 {
@@ -30,7 +27,7 @@ namespace esnd
              * @param channels 1 = Mono, 2 = Stereo
              * @param sampleRate 44100 is optimal for best quality. Anything less will decrease the sound quality.
              */
-            virtual void loadFromFile(const std::string &path, uint32_t channels, uint32_t sampleRate) = 0;
+            virtual esnd::StreamLoadStatus loadFromFile(const std::string &path, uint32_t channels, uint32_t sampleRate) = 0;
 
             /*!
              * Load from memory.
@@ -40,7 +37,7 @@ namespace esnd
              * @param channels 1 = Mono, 2 = Stereo
              * @param sampleRate 44100 is optimal for best quality. Anything less will decrease the sound quality.
              */
-            virtual void loadFromMemory(void *data, size_t size, uint32_t channels, uint32_t sampleRate) = 0;
+            virtual esnd::StreamLoadStatus loadFromMemory(void *data, size_t size, uint32_t channels, uint32_t sampleRate) = 0;
 
             virtual void play() = 0;
             virtual void pause() = 0;

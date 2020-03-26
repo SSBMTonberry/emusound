@@ -97,10 +97,10 @@ set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp $
 
 set(SOURCE_FILES include/audio/ISoundStream.h include/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h
         include/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp
-        include/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp)
+        include/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
+        include/external/emusound_external.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/)
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
-target_link_libraries(emusound ${SOURCE_FILES})
 
 add_subdirectory(demo)

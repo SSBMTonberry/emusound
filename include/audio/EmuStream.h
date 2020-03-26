@@ -12,13 +12,11 @@
 #include "EmuConfig.hpp"
 #include <functional>
 
-
-
 namespace esnd
 {
-    void onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
-    size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
-    ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
+    inline void onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
+    inline size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
+    inline ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
 
     class EmuConfig
     {
@@ -87,13 +85,12 @@ namespace esnd
 
             bool isValid() const;
 
-
             //Overridden
-            void loadFromFile(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
-            void loadFromMemory(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            esnd::StreamLoadStatus loadFromFile(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            esnd::StreamLoadStatus loadFromMemory(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
 
-            void loadFromFile(const std::string &filename, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
-            void loadFromMemory(void *data, size_t size, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
+            esnd::StreamLoadStatus loadFromFile(const std::string &filename, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
+            esnd::StreamLoadStatus loadFromMemory(void *data, size_t size, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
 
             void play() override;
             void pause() override;
