@@ -404,7 +404,7 @@ void esnd::EmuStream::stop()
 
 void esnd::EmuStream::seek(int offset)
 {
-    //ma_decoder_seek_to_pcm_frame(&m_decoder, offset);
+    ma_decoder_seek_to_pcm_frame(&m_config.decoder, offset);
 }
 
 esnd::SoundStatus esnd::EmuStream::getStatus() const

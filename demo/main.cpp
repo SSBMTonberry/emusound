@@ -285,7 +285,10 @@ int emusoundExample(int argc, char** argv)
     //initEmu(argv[1]);
     esnd::EmuStream emuStream;
     esnd::StreamLoadStatus status = emuStream.loadFromFile(argv[1], 6);
+    emuStream.seek(5000);
     emuStream.play();
+
+    ma_waveform_config conf;
 
     printf("Press Enter to quit...");
     getchar();
