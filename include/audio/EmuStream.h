@@ -12,8 +12,14 @@
 #include "EmuConfig.hpp"
 #include <functional>
 
+
+
 namespace esnd
 {
+    void onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
+    size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
+    ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
+
     class EmuConfig
     {
         public:
@@ -39,7 +45,8 @@ namespace esnd
     class EmuStream : public ISoundStream
     {
         public:
-            EmuStream();
+            EmuStream() = default;
+            ~EmuStream();
             EmuStream(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
             EmuStream(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
 
@@ -74,8 +81,12 @@ namespace esnd
             int getNumberOfTracks() const;
             const std::string &getId() const;
             int getNumberOfPlays() const;
+            const EmuConfig &getConfig() const;
+
+            Music_Emu *getEmu() const;
 
             bool isValid() const;
+
 
             //Overridden
             void loadFromFile(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
@@ -94,15 +105,20 @@ namespace esnd
             [[nodiscard]] uint32_t getChannelCount() const override;
             [[nodiscard]] uint32_t getSampleRate() const override;
 
+            friend void onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
+            friend size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
+            friend ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
+
         protected:
-            void initialize();
+            StreamLoadStatus initialize();
+            StreamLoadStatus initializeEmu();
+            bool hasEmuError(gme_err_t emuError);
 
             size_t onRead(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead) override;
             ma_bool32 onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin) override;
             void onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount) override;
 
             std::vector<short> m_samples;
-            std::mutex m_mutex; //Mutex for thread protection
 
             /*! Sample rate. 44100 is default and is the best quality. Anything below will take less space, but will
              *  also get worse quality on the sound. */

@@ -14,6 +14,27 @@ namespace esnd
         Playing = 2
     };
 
+    /*!
+     * 0 - 99 = General
+     * 100 - 199 = Emu related
+     */
+    enum class StreamLoadStatus
+    {
+        OK = 0,
+        StreamOpenFailure = 1,
+        StreamStartFailure = 2,
+
+
+        EmuFileIdentificationError = 100,
+        EmuOutOfMemory = 102,
+        EmuFileLoadError = 101,
+        EmuMemoryLoadError = 102,
+        EmuUnsupportedMusicType = 103,
+        EmuInvalidSampleRate = 104,
+        EmuInvalidTrack = 105,
+        EmuErrorLoadingTrackData = 106
+    };
+
     enum class StreamMode
     {
         File = 0,
