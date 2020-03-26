@@ -5,10 +5,28 @@
 #ifndef EMUSOUND_EMUCONFIG_HPP
 #define EMUSOUND_EMUCONFIG_HPP
 
-//#define MINIAUDIO_IMPLEMENTATION
-//#include "miniaudio.h"
-//namespace esnd
-//{
-//
-//}
+namespace esnd
+{
+    class EmuConfig
+    {
+        public:
+            EmuConfig() = default;
+            EmuConfig(uint32_t channels, uint32_t sampleRate)
+            {
+                initialize(channels, sampleRate);
+            }
+
+            void initialize(uint32_t channels, uint32_t sampleRate)
+            {
+                dec_config_in = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
+                dec_config_out = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
+            }
+
+            ma_decoder decoder;
+            ma_decoder_config dec_config_in;
+            ma_decoder_config dec_config_out;
+            ma_device_config deviceConfig;
+            ma_device device;
+    };
+}
 #endif //EMUSOUND_EMUCONFIG_HPP

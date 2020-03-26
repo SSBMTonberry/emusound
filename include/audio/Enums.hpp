@@ -23,7 +23,7 @@ namespace esnd
         OK = 0,
         StreamOpenFailure = 1,
         StreamStartFailure = 2,
-
+        DecoderInitError = 3,
 
         EmuFileIdentificationError = 100,
         EmuOutOfMemory = 102,

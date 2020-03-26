@@ -18,28 +18,6 @@ namespace esnd
     inline size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
     inline ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
 
-    class EmuConfig
-    {
-        public:
-            EmuConfig() = default;
-            EmuConfig(uint32_t channels, uint32_t sampleRate)
-            {
-                initialize(channels, sampleRate);
-            }
-
-            void initialize(uint32_t channels, uint32_t sampleRate)
-            {
-                dec_config_in = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
-                dec_config_out = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
-            }
-
-            ma_decoder decoder;
-            ma_decoder_config dec_config_in;
-            ma_decoder_config dec_config_out;
-            ma_device_config deviceConfig;
-            ma_device device;
-    };
-
     class EmuStream : public ISoundStream
     {
         public:
@@ -148,6 +126,8 @@ namespace esnd
 
             EmuConfig m_config;
             ma_result m_decoderInitStatus;
+
+            //std::mutex m_mutex; //Mutex for thread protection
     };
 }
 

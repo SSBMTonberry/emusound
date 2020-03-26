@@ -147,7 +147,7 @@ size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 
 
     m_emu->play(bufferSize, (short*) pBufferOut);
-    ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, pBufferOut, bufferSize);
+    //ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, pBufferOut, bufferSize);
     //m_emu->play(bufferSize, &m_shorties[0]);//(short*) pBufferOut);
     //ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, &m_shorties[0], bufferSize);
 
@@ -277,6 +277,7 @@ int emuExample(int argc, char** argv)
 
     return 0;
 }
+
 
 int emusoundExample(int argc, char** argv)
 {

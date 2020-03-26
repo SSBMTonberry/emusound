@@ -4,14 +4,14 @@
 
 #include "EmuStream.h"
 
-std::mutex mutex; //Mutex for thread protection
+
 
 
 void esnd::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
 
     //ma_decoder* pDecoder = (ma_decoder*)pDevice->pUserData;
-    std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
+    //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
 
     esnd::EmuStream *stream = (esnd::EmuStream*)pDevice->pUserData;
     if(stream == nullptr)
@@ -23,7 +23,7 @@ void esnd::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput,
 
 size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 {
-    std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
+    //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
     esnd::EmuStream *stream = (esnd::EmuStream*)pDecoder->pUserData;
     if(stream == nullptr)
         return 0;
@@ -34,7 +34,7 @@ size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytes
 
 ma_bool32 esnd::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
 {
-    std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
+    //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
     esnd::EmuStream *stream = (esnd::EmuStream*)pDecoder->pUserData;
     if(stream == nullptr)
         return false;
@@ -45,7 +45,7 @@ ma_bool32 esnd::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_ori
 
 esnd::EmuStream::~EmuStream()
 {
-    std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
+    //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
     if(m_emu != nullptr)
     {
         ma_device_uninit(&m_config.device);
@@ -77,10 +77,16 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
 
     m_config.initialize(m_channels, m_sampleRate);
 
-    initializeEmu();
+    esnd::StreamLoadStatus emustats = initializeEmu();
+    if(emustats != esnd::StreamLoadStatus::OK)
+        return emustats;
 
     m_decoderInitStatus = ma_decoder_init_raw(onReadCallback, onSeekCallback, &m_config.decoder,
                                               &m_config.dec_config_in, &m_config.dec_config_out, &m_config.decoder);
+
+    if (m_decoderInitStatus != MA_SUCCESS) {
+        return esnd::StreamLoadStatus::DecoderInitError;
+    }
 
     m_config.decoder.pUserData = this;
 
@@ -408,6 +414,7 @@ esnd::SoundStatus esnd::EmuStream::getStatus() const
 
 size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead)
 {
+    //std::lock_guard<std::mutex> guard(m_mutex);
     size_t bufferSize = bytesToRead / 2;
 
     m_emu->play(bufferSize, (short*) pBufferOut);
@@ -417,6 +424,7 @@ size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t by
 
 ma_bool32 esnd::EmuStream::onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin)
 {
+    //std::lock_guard<std::mutex> guard(m_mutex);
     int toSeek = byteOffset / 4;
     blargg_err_t error = m_emu->seek(toSeek);
 
@@ -425,6 +433,7 @@ ma_bool32 esnd::EmuStream::onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_
 
 void esnd::EmuStream::onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount)
 {
+    //std::lock_guard<std::mutex> guard(m_mutex);
     ma_decoder_read_pcm_frames(&m_config.decoder, pOutput, frameCount);
 
     (void)pInput;
