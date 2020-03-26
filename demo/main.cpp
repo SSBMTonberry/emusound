@@ -23,8 +23,8 @@
 
 #include <stdio.h>
 #include <vector>
-#define MINIAUDIO_IMPLEMENTATION
-#include "../include/audio/EmuStream.h"
+
+#include "../include/emusound.h"
 
 std::string m_track_info;
 
