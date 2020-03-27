@@ -2,7 +2,7 @@
 // Created by robin on 25.03.2020.
 //
 
-#include "EmuStream.h"
+#include "../../include/audio/EmuStream.h"
 
 
 
@@ -19,6 +19,8 @@ void esnd::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput,
 
     if(stream->getStatus() == esnd::SoundStatus::Playing)
         stream->onGetData(pDevice, pOutput, pInput, frameCount);
+
+    (void)pInput;
 }
 
 size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
@@ -28,8 +30,11 @@ size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytes
     if(stream == nullptr)
         return 0;
 
+
     if(stream->getStatus() == esnd::SoundStatus::Playing)
         return stream->onRead(pDecoder, pBufferOut, bytesToRead);
+
+    return 0;
 }
 
 ma_bool32 esnd::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
@@ -110,6 +115,8 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
         return esnd::StreamLoadStatus::StreamStartFailure;
     }
 
+
+
     return esnd::StreamLoadStatus::OK;
 }
 
@@ -163,7 +170,6 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
     }
 
     m_numberOfTracks = gme_track_count(m_emu);
-
     if(hasEmuError(m_emu->start_track( m_track ))) return esnd::StreamLoadStatus::EmuInvalidTrack;
 
     //Load tracks
@@ -416,8 +422,11 @@ size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t by
 {
     //std::lock_guard<std::mutex> guard(m_mutex);
     size_t bufferSize = bytesToRead / 2;
-
     m_emu->play(bufferSize, (short*) pBufferOut);
+
+    int filterStatus = processFilters(pBufferOut, bufferSize, pBufferOut);
+
+    ma_apply_volume_factor_pcm_frames(pBufferOut, bufferSize / 2, ma_format_s16, 2, 1.0f);
 
     return bufferSize;
 }
@@ -434,9 +443,8 @@ ma_bool32 esnd::EmuStream::onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_
 void esnd::EmuStream::onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount)
 {
     //std::lock_guard<std::mutex> guard(m_mutex);
-    ma_decoder_read_pcm_frames(&m_config.decoder, pOutput, frameCount);
 
-    (void)pInput;
+    size_t bufferRead = ma_decoder_read_pcm_frames(&m_config.decoder, pOutput, frameCount);
 }
 
 uint32_t esnd::EmuStream::getChannelCount() const

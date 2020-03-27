@@ -61,7 +61,7 @@ endif()
 
 configure_file (
         "${PROJECT_SOURCE_DIR}/EmusoundConfig.h.in"
-        "${PROJECT_SOURCE_DIR}/EmusoundConfig.h"
+        "${PROJECT_SOURCE_DIR}/include/EmusoundConfig.h"
 )
 
 #configure_file(
@@ -95,10 +95,11 @@ set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp $
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2413_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_GENS.cpp
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_Nuked.cpp )
 
-set(SOURCE_FILES include/audio/ISoundStream.h include/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h
-        include/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp
-        include/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
-        include/external/emusound_external.h include/emusound.h)
+set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h
+        src/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp
+        src/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
+        include/external/emusound_external.h include/emusound.h include/audio/filters/ISoundFilter.h
+        include/audio/filters/LowpassFilter.hpp include/audio/filters/emusound_filters.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/)
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})

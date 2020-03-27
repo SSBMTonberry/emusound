@@ -93,6 +93,9 @@ namespace esnd
             ma_bool32 onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin) override;
             void onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount) override;
 
+            /*!
+             * Samples to store in case they are to be exported to a file.
+             */
             std::vector<short> m_samples;
 
             /*! Sample rate. 44100 is default and is the best quality. Anything below will take less space, but will

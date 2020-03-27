@@ -11,9 +11,11 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "Enums.hpp"
 #include "../external/emusound_external.h"
+#include "filters/emusound_filters.h"
 
 namespace esnd
 {
@@ -49,11 +51,50 @@ namespace esnd
 
             [[nodiscard]] virtual SoundStatus getStatus() const = 0;
 
+            template <typename T, typename... Args>
+            T * addFilter(Args &&... args);
+
+            template <typename T, typename... Args>
+            T * getFilter(const std::string &id);
+
+            virtual int processFilters(const void *input, size_t inputSize, void *output)
+            {
+                int status = 0;
+                for(auto &filter : m_filters)
+                {
+                    int result = filter->process(input, inputSize / getChannelCount(), output);
+                    if(result != 0)
+                        status = result;
+                }
+
+                return status;
+            }
+
         protected:
             virtual size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead) = 0;
             virtual ma_bool32 onSeek(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin) = 0;
             virtual void onGetData(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) = 0;
+
+            std::vector<std::unique_ptr<ISoundFilter>> m_filters;
     };
+
+    template<typename T, typename... Args>
+    T *ISoundStream::addFilter(Args &&... args)
+    {
+        m_filters.emplace_back(new T(args...));
+        return dynamic_cast<T*>(m_filters[m_filters.size() - 1].get());
+    }
+
+    template<typename T, typename... Args>
+    T *ISoundStream::getFilter(const std::string &id)
+    {
+        for(int i = 0; i < m_filters.size(); ++i)
+        {
+             if(m_filters[i]->getId() == id)
+                 return dynamic_cast<T*>(m_filters[i].get());
+        }
+        return nullptr;
+    }
 }
 
 #endif //EMUSOUND_ISOUNDSTREAM_H

@@ -135,7 +135,7 @@ void data_callback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uin
         return;
     }
 
-    ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount);
+    size_t bufferRead = ma_decoder_read_pcm_frames(pDecoder, pOutput, frameCount);
 
     (void)pInput;
 }
@@ -147,7 +147,7 @@ size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 
 
     m_emu->play(bufferSize, (short*) pBufferOut);
-    //ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, pBufferOut, bufferSize);
+    ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, pBufferOut, bufferSize);
     //m_emu->play(bufferSize, &m_shorties[0]);//(short*) pBufferOut);
     //ma_lpf1_process_pcm_frames(&lowpass_filter, pBufferOut, &m_shorties[0], bufferSize);
 
@@ -285,6 +285,12 @@ int emusoundExample(int argc, char** argv)
     //initEmu(argv[1]);
     esnd::EmuStream emuStream;
     esnd::StreamLoadStatus status = emuStream.loadFromFile(argv[1], 6);
+
+    if(status == esnd::StreamLoadStatus::OK)
+    {
+        emuStream.addFilter<esnd::LowpassFilter>("lp_filter", 200);
+        //filter->isActive = false;
+    }
     emuStream.seek(5000);
     emuStream.play();
 

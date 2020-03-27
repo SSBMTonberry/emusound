@@ -2,7 +2,7 @@
 // Created by robin on 25.03.2020.
 //
 
-#include "EmuVoice.h"
+#include "../../include/audio/EmuVoice.h"
 
 esnd::EmuVoice::EmuVoice(Music_Emu *emu, int channelNo, const std::string &channelName, bool isMuted)
         : m_emu {emu}, m_channelNo {channelNo}, m_channelName {channelName}, m_isMuted {isMuted}

@@ -2,7 +2,7 @@
 // Created by robin on 24.03.2020.
 //
 
-#include "EmuTrackInfo.h"
+#include "../../include/data/EmuTrackInfo.h"
 
 esnd::EmuTrackInfo::EmuTrackInfo()
 {
