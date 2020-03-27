@@ -288,7 +288,7 @@ int emusoundExample(int argc, char** argv)
 
     if(status == esnd::StreamLoadStatus::OK)
     {
-        emuStream.addFilter<esnd::LowpassFilter>("lp_filter", 200);
+        emuStream.addFilter<esnd::LowpassFilter1>("lp_filter", 200);
         //filter->isActive = false;
     }
     emuStream.seek(5000);

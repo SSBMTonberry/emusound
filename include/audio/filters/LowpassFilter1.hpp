@@ -2,18 +2,18 @@
 // Created by robin on 27.03.2020.
 //
 
-#ifndef EMUSOUND_LOWPASSFILTER_HPP
-#define EMUSOUND_LOWPASSFILTER_HPP
+#ifndef EMUSOUND_LOWPASSFILTER1_HPP
+#define EMUSOUND_LOWPASSFILTER1_HPP
 
 #include "ISoundFilter.h"
 
 namespace esnd
 {
-    class LowpassFilter : public ISoundFilter
+    class LowpassFilter1 : public ISoundFilter
     {
         public:
-            LowpassFilter() = default;
-            LowpassFilter(const std::string &id, double cutoffFrequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            LowpassFilter1() = default;
+            LowpassFilter1(const std::string &id, double cutoffFrequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
                 init(id, cutoffFrequency, channels, sampleRate);
             }
@@ -48,8 +48,8 @@ namespace esnd
             ma_lpf1 filter;
 
         private:
-            std::string m_id = "default_lowpass_id";
+            std::string m_id = "default_lowpass1_id";
     };
 }
 
-#endif //EMUSOUND_LOWPASSFILTER_HPP
+#endif //EMUSOUND_LOWPASSFILTER1_HPP

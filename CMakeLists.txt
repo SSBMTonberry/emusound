@@ -99,7 +99,7 @@ set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/
         src/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp
         src/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
         include/external/emusound_external.h include/emusound.h include/audio/filters/ISoundFilter.h
-        include/audio/filters/LowpassFilter.hpp include/audio/filters/emusound_filters.h)
+        include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/)
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
