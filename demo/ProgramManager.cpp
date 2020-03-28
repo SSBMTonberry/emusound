@@ -24,18 +24,29 @@ bool esnddemo::ProgramManager::initialize()
 
 void esnddemo::ProgramManager::initializeEmuStream()
 {
-    std::string nsfePath =  "./../../content/emu_tests/test.nsfe";
+    std::string nsfePath =  "./../../content/emu_tests/blueshadow.nsfe";
     //std::string nsfPath =   "./../../content/emu_tests/test.nsf";
     std::string spcPath =   "./../../content/emu_tests/test.spc";
     std::string vgmPath =   "./../../content/emu_tests/test.vgm";
 
     esnd::StreamLoadStatus status1 = m_nsfeDemo.loadFromFile(nsfePath);
-    m_nsfeDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200);
-    //m_nsfeDemo.addFilter<esnd::LowpassFilter2>("lp_filter2", 200);
+    m_nsfeDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
+    m_nsfeDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+
     m_nsfDemo.loadFromMemory((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
+    m_nsfDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
+    m_nsfDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+
     //m_nsfDemo.loadFromFile(nsfPath);
     m_spcDemo.loadFromFile(spcPath);
+    m_spcDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
+    m_spcDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+
     m_vgmDemo.loadFromFile(vgmPath);
+    m_vgmDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
+    m_vgmDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+
+
 }
 
 void esnddemo::ProgramManager::initializeAudioManager()
@@ -279,22 +290,28 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
         case esnd::FilterType::LowpassFirstOrder:
             handleLowpassFilter1(dynamic_cast<esnd::LowpassFilter1*>(filter));
             break;
+
+        case esnd::FilterType::LowpassSecondOrder:
+            handleLowpassFilter2(dynamic_cast<esnd::LowpassFilter2*>(filter));
+            break;
     }
 
 }
 
 void esnddemo::ProgramManager::handleLowpassFilter1(esnd::LowpassFilter1 *filter)
 {
+    double min = 0;
+    double max = 1000.0;
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::InputDouble("cutoffFrequency", &filter->config.cutoffFrequency))
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
     {
         filter->refresh();
     }
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::Checkbox("active", &filter->isActive))
+    if(ImGui::Checkbox(fmt::format("active###{0}", filter->getId()).c_str(), &filter->isActive))
     {
 
     }
@@ -303,5 +320,27 @@ void esnddemo::ProgramManager::handleLowpassFilter1(esnd::LowpassFilter1 *filter
 
 void esnddemo::ProgramManager::handleLowpassFilter2(esnd::LowpassFilter2 *filter)
 {
+    double min = 0, min_q = 0;
+    double max = 1000.0, max_q = 2;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("q###{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.q, 1, &min_q, &max_q))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###{0}", filter->getId()).c_str(), &filter->isActive))
+    {
 
+    }
+    ImGui::PopItemWidth();
 }
