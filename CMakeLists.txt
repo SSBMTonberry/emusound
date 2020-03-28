@@ -97,7 +97,7 @@ set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp $
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_Nuked.cpp )
 
 set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h
-        src/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp
+        src/audio/EmuStream.cpp include/audio/EmuStream.h include/Enums.hpp
         src/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
         include/emusound.h include/audio/filters/ISoundFilter.h
         include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h src/external/emusound_external.cpp)

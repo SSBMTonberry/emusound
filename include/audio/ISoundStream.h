@@ -57,6 +57,11 @@ namespace esnd
             template <typename T, typename... Args>
             T * getFilter(const std::string &id);
 
+            std::vector<std::unique_ptr<ISoundFilter>> *getFilters()
+            {
+                return &m_filters;
+            }
+
             virtual int processFilters(const void *input, size_t inputSize, void *output)
             {
                 int status = 0;

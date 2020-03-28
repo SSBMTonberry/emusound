@@ -24,13 +24,16 @@ bool esnddemo::ProgramManager::initialize()
 
 void esnddemo::ProgramManager::initializeEmuStream()
 {
-    std::string nsfePath =  "./../../content/demo/gme_tests/test.nsfe";
-    std::string nsfPath =   "./../../content/demo/gme_tests/test.nsf";
-    std::string spcPath =   "./../../content/demo/gme_tests/test.spc";
-    std::string vgmPath =   "./../../content/demo/gme_tests/test.vgm";
+    std::string nsfePath =  "./../../content/emu_tests/test.nsfe";
+    //std::string nsfPath =   "./../../content/emu_tests/test.nsf";
+    std::string spcPath =   "./../../content/emu_tests/test.spc";
+    std::string vgmPath =   "./../../content/emu_tests/test.vgm";
 
-    m_nsfeDemo.loadFromFile(nsfePath);
-    m_nsfDemo.loadFromFile(nsfPath);
+    esnd::StreamLoadStatus status1 = m_nsfeDemo.loadFromFile(nsfePath);
+    m_nsfeDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200);
+    //m_nsfeDemo.addFilter<esnd::LowpassFilter2>("lp_filter2", 200);
+    m_nsfDemo.loadFromMemory((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
+    //m_nsfDemo.loadFromFile(nsfPath);
     m_spcDemo.loadFromFile(spcPath);
     m_vgmDemo.loadFromFile(vgmPath);
 }
@@ -129,6 +132,7 @@ void esnddemo::ProgramManager::drawForms()
 {
     drawEmuStreamForm();
     drawAudioManagerForm();
+    drawFilterForm();
 }
 
 void esnddemo::ProgramManager::drawEmuStreamForm()
@@ -139,28 +143,32 @@ void esnddemo::ProgramManager::drawEmuStreamForm()
     if(ImGui::SmallButton("Play")) m_nsfeDemo.play(); ImGui::SameLine();
     if(ImGui::SmallButton("Stop")) m_nsfeDemo.stop(); ImGui::SameLine();
     if(ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
+    if(ImGui::SmallButton("->")) m_nsfeDemo.nextTrack(); ImGui::SameLine();
+    if(ImGui::SmallButton("Filter")) m_streamForFilter = &m_nsfeDemo;
 
     //NSF
-    ImGui::Text("NSF"); ImGui::SameLine();
+    ImGui::Text("NSF "); ImGui::SameLine();
     if(ImGui::SmallButton("Play###NSFPlay")) m_nsfDemo.play(); ImGui::SameLine();
     if(ImGui::SmallButton("Stop###NSFStop")) m_nsfDemo.stop(); ImGui::SameLine();
     if(ImGui::SmallButton("<-###NSF<-")) m_nsfDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->###NSF->")) m_nsfDemo.nextTrack();
+    if(ImGui::SmallButton("->###NSF->")) m_nsfDemo.nextTrack(); ImGui::SameLine();
+    if(ImGui::SmallButton("Filter###NSF_filter")) m_streamForFilter = &m_nsfDemo;
 
     //SPC
-    ImGui::Text("SPC"); ImGui::SameLine();
+    ImGui::Text("SPC "); ImGui::SameLine();
     if(ImGui::SmallButton("Play###SPCPlay")) m_spcDemo.play(); ImGui::SameLine();
     if(ImGui::SmallButton("Stop###SPCStop")) m_spcDemo.stop(); ImGui::SameLine();
     if(ImGui::SmallButton("<-###SPC<-")) m_spcDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->###SPC->")) m_spcDemo.nextTrack();
+    if(ImGui::SmallButton("->###SPC->")) m_spcDemo.nextTrack(); ImGui::SameLine();
+    if(ImGui::SmallButton("Filter###SPC_filter")) m_streamForFilter = &m_spcDemo;
 
     //VGM
-    ImGui::Text("VGM"); ImGui::SameLine();
+    ImGui::Text("VGM "); ImGui::SameLine();
     if(ImGui::SmallButton("Play###VGMPlay")) m_vgmDemo.play(); ImGui::SameLine();
     if(ImGui::SmallButton("Stop###VGMStop")) m_vgmDemo.stop(); ImGui::SameLine();
     if(ImGui::SmallButton("<-###VGM<-")) m_vgmDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->###VGM->")) m_vgmDemo.nextTrack();
+    if(ImGui::SmallButton("->###VGM->")) m_vgmDemo.nextTrack(); ImGui::SameLine();
+    if(ImGui::SmallButton("Filter###VGM_filter")) m_streamForFilter = &m_vgmDemo;
 
     if(ImGui::Button("STOP!", {100, 40}))
     {
@@ -248,4 +256,52 @@ void esnddemo::ProgramManager::drawAudioManagerForm()
     ////}
 //
     //ImGui::End();
+}
+
+void esnddemo::ProgramManager::drawFilterForm()
+{
+    ImGui::Begin("Filters");
+    if(m_streamForFilter != nullptr)
+    {
+        for(auto &filter : *m_streamForFilter->getFilters())
+        {
+            manageFilter(filter.get());
+        }
+    }
+    ImGui::End();
+}
+
+void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
+{
+    ImGui::Text(filter->getId().c_str());
+    switch(filter->getFilterType())
+    {
+        case esnd::FilterType::LowpassFirstOrder:
+            handleLowpassFilter1(dynamic_cast<esnd::LowpassFilter1*>(filter));
+            break;
+    }
+
+}
+
+void esnddemo::ProgramManager::handleLowpassFilter1(esnd::LowpassFilter1 *filter)
+{
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::InputDouble("cutoffFrequency", &filter->config.cutoffFrequency))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox("active", &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleLowpassFilter2(esnd::LowpassFilter2 *filter)
+{
+
 }

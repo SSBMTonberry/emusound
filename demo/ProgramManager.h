@@ -10,6 +10,8 @@
 #include "../include/emusound.h"
 #include "audio_demo_files_mapper.h"
 
+namespace file = audio_demo_files_files_mapper;
+
 namespace esnddemo
 {
     class ProgramManager
@@ -33,7 +35,12 @@ namespace esnddemo
 
             void drawForms();
             void drawEmuStreamForm();
+            void drawFilterForm();
             void drawAudioManagerForm();
+
+            void manageFilter(esnd::ISoundFilter *filter);
+            void handleLowpassFilter1(esnd::LowpassFilter1 *filter);
+            void handleLowpassFilter2(esnd::LowpassFilter2 *filter);
 
             sf::RenderWindow m_window;
 
@@ -42,6 +49,8 @@ namespace esnddemo
             esnd::EmuStream m_nsfDemo;
             esnd::EmuStream m_spcDemo;
             esnd::EmuStream m_vgmDemo;
+
+            esnd::EmuStream *m_streamForFilter = nullptr;
 
             //ImGui
             ImGuiStyle *m_style = nullptr;

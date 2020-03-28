@@ -40,6 +40,27 @@ namespace esnd
         File = 0,
         Memory = 1
     };
+
+    enum class FilterType
+    {
+        Undefined = 0,
+
+        Biquad = 1,                     //ma_biquad
+        LowpassFirstOrder = 2,          //ma_lpf1
+        LowpassSecondOrder = 3,         //ma_lpf2
+        LowpassConfigurableOrder = 4,   //ma_lpf
+        HighpassFirstOrder = 5,         //ma_hpf1
+        HighpassSecondOrder = 6,        //ma_hpf2
+        HighpassConfigurableOrder = 7,  //ma_hpf
+        BandpassSecondOrder = 8,        //ma_bpf2
+        BandpassConfigurableOrder = 9,  //ma_bpf
+        PeakingEqSecondOrder = 10,      //ma_peak2
+        NotchingSecondOrder = 11,       //ma_notch2
+        LowshelfSecondOrder = 12,       //ma_loshelf2
+        HighshelfSecondOrder = 13,      //ma_hishelf2
+
+        Custom = 999
+    };
 }
 
 #endif //EMUSOUND_ENUMS_HPP

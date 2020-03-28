@@ -44,6 +44,11 @@ namespace esnd
                 return m_id;
             }
 
+            const esnd::FilterType getFilterType() const override
+            {
+                return esnd::FilterType::LowpassFirstOrder;
+            }
+
             ma_lpf1_config config;
             ma_lpf1 filter;
 

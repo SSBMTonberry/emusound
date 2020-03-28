@@ -6,5 +6,6 @@
 #define EMUSOUND_EMUSOUND_FILTERS_H
 
 #include "LowpassFilter1.hpp"
+#include "LowpassFilter2.hpp"
 
 #endif //EMUSOUND_EMUSOUND_FILTERS_H

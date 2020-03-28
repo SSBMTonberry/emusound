@@ -406,6 +406,7 @@ void esnd::EmuStream::pause()
 void esnd::EmuStream::stop()
 {
     m_status = SoundStatus::Stopped;
+    seek(0);
 }
 
 void esnd::EmuStream::seek(int offset)
