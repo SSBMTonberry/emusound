@@ -8,7 +8,7 @@ set(PROJECT_VERSION_MINOR 0)
 set(PROJECT_VERSION_PATCH 1)
 set(CMAKE_CXX_FLAGS -DSFML_STATIC)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSFML_STATIC -DEBOX_DEBUG")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSFML_STATIC -DESND_DEBUG")
 
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING
@@ -24,28 +24,28 @@ else()
     set(RELEASE 1)
 endif()
 
-set(ESND_LINUX 0)
-set(ESND_WINDOWS 0)
-set(ESND_APPLE 0)
-set(ESND_MSVC 0)
-set(ESND_MINGW 0)
+set(LINUX 0)
+set(WINDOWS 0)
+set(APPLE 0)
+set(MSVC 0)
+set(MINGW 0)
 
 if(UNIX AND NOT APPLE)
-    set(ESND_LINUX 1)
+    set(LINUX 1)
 elseif(APPLE)
     link_directories(/usr/local/opt/llvm/lib/)
-    set(ESND_APPLE 1)
+    set(APPLE 1)
 elseif(WIN32)
-    set(ESND_WINDOWS 1)
+    set(WINDOWS 1)
     if(MSVC)
-        set(ESND_MSVC 1)
+        set(MSVC 1)
     elseif(MINGW)
-        set(ESND_MINGW 1)
+        set(MINGW 1)
     endif()
 endif()
 
 #SFML
-set(BUILD_SHARED_LIBS FALSE) #build SFML with static libs
+set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
 
 if(DEBUG)
     message("Adding debug submodules")
@@ -101,7 +101,12 @@ set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/
         include/external/emusound_external.h include/emusound.h include/audio/filters/ISoundFilter.h
         include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h)
 
-include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/)
+include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/
+        ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src)
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
 
 add_subdirectory(demo)
+
+unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
+unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
+unset(BUILD_DEMO CACHE)

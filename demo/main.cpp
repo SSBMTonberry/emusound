@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "../include/emusound.h"
+#include "ProgramManager.h"
 
 std::string m_track_info;
 
@@ -302,9 +303,24 @@ int emusoundExample(int argc, char** argv)
     return 0;
 }
 
+int emuprogramExample(int argc, char** argv)
+{
+
+    std::string title = "emusound demo";
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 0;
+    audiodemo::ProgramManager program(title, sf::Vector2i(400 * 4, 240 * 4), sf::Vector2i(400, 240), sf::Style::Titlebar, settings);
+    //program.setZoomValue(1.f);
+    program.initialize();
+    program.run();
+
+    return 0;
+}
+
 int main(int argc, char** argv)
 {
     //return example(argc, argv);
     //return emuExample(argc, argv);
-    return emusoundExample(argc, argv);
+    //return emusoundExample(argc, argv);
+    return emuprogramExample(argc, argv);
 }

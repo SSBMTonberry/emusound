@@ -64,8 +64,8 @@ namespace esnd
             bool isValid() const;
 
             //Overridden
-            esnd::StreamLoadStatus loadFromFile(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
-            esnd::StreamLoadStatus loadFromMemory(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            esnd::StreamLoadStatus loadFromFile(const std::string &filename, int track, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            esnd::StreamLoadStatus loadFromMemory(void *data, size_t size, int track, uint32_t channels = 2, uint32_t sampleRate = 44100);
 
             esnd::StreamLoadStatus loadFromFile(const std::string &filename, uint32_t channels = 2, uint32_t sampleRate = 44100) override;
             esnd::StreamLoadStatus loadFromMemory(void *data, size_t size, uint32_t channels = 2, uint32_t sampleRate = 44100) override;

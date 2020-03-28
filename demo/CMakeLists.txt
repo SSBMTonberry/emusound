@@ -28,12 +28,12 @@ set(CMAKE_CXX_STANDARD 17)
 #        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2413_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2612_GENS.cpp
 #        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2612_Nuked.cpp)
 
-set(DEMO_SOURCE_FILES main.cpp dr_wav.h) #EmuAudioSource.cpp EmuAudioSource.h miniaudio.h)
+set(DEMO_SOURCE_FILES main.cpp dr_wav.h ProgramManager.cpp ProgramManager.h) #EmuAudioSource.cpp EmuAudioSource.h miniaudio.h)
 
-include_directories(../external_libs/include ../external_libs/include/libgme)
+include_directories(../external_libs/include ../external_libs/include/libgme ../external_libs/source/pmgui/src)
 
 add_executable(emusound_demo ${DEMO_SOURCE_FILES})
 
 #message("Brolo: ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a")
-target_link_libraries(emusound_demo emusound pthread dl)
+target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system pthread dl)
 #target_link_libraries(emusound_demo ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a pthread asound dl)
