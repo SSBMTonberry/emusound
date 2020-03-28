@@ -5,8 +5,8 @@
 #ifndef EMUSOUND_ISOUNDSTREAM_H
 #define EMUSOUND_ISOUNDSTREAM_H
 
-#include "libgme/gme.h"
-#include "libgme/Music_Emu.h"
+#include "external/libgme/gme.h"
+#include "external/libgme/Music_Emu.h"
 
 #include <stdio.h>
 #include <vector>
@@ -14,7 +14,7 @@
 #include <memory>
 
 #include "Enums.hpp"
-#include "../external/emusound_external.h"
+//#include "../external/emusound_external.h"
 #include "filters/emusound_filters.h"
 
 namespace esnd

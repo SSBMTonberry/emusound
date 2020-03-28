@@ -5,12 +5,10 @@
 #ifndef EMUSOUND_EMUSOUND_H
 #define EMUSOUND_EMUSOUND_H
 
-#define MINIAUDIO_IMPLEMENTATION
-
 #include "EmusoundConfig.h"
 
+//#include "external/emusound_external.h"
 #include "audio/EmuStream.h"
-#include "external/emusound_external.h"
 
 
 #endif //EMUSOUND_EMUSOUND_H

@@ -24,28 +24,29 @@ else()
     set(RELEASE 1)
 endif()
 
-set(LINUX 0)
-set(WINDOWS 0)
-set(APPLE 0)
-set(MSVC 0)
-set(MINGW 0)
+set(ESND_LINUX 0)
+set(ESND_WINDOWS 0)
+set(ESND_APPLE 0)
+set(ESND_MSVC 0)
+set(ESND_MINGW 0)
 
 if(UNIX AND NOT APPLE)
-    set(LINUX 1)
+    set(ESND_LINUX 1)
 elseif(APPLE)
     link_directories(/usr/local/opt/llvm/lib/)
-    set(APPLE 1)
+    set(ESND_APPLE 1)
 elseif(WIN32)
-    set(WINDOWS 1)
+    set(ESND_WINDOWS 1)
     if(MSVC)
-        set(MSVC 1)
+        set(ESND_MSVC 1)
     elseif(MINGW)
-        set(MINGW 1)
+        set(ESND_MINGW 1)
     endif()
 endif()
 
 #SFML
 set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
+set(SFML_BUILD_AUDIO OFF)
 
 if(DEBUG)
     message("Adding debug submodules")
@@ -98,10 +99,10 @@ set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp $
 set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h
         src/audio/EmuStream.cpp include/audio/EmuStream.h include/audio/Enums.hpp
         src/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
-        include/external/emusound_external.h include/emusound.h include/audio/filters/ISoundFilter.h
-        include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h)
+        include/emusound.h include/audio/filters/ISoundFilter.h
+        include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h src/external/emusound_external.cpp)
 
-include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/external/ ${PROJECT_SOURCE_DIR}/external_libs/source/
+include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/external_libs/source/
         ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src)
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
 

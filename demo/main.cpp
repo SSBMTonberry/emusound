@@ -2,10 +2,10 @@
 // Created by robin on 19.01.2020.
 //
 
-#include <iostream>
+//#include <iostream>
 //#include "caudio/cAudio/include/cAudio.h"
 //#include <soloud/soloud_wavstream.h>
-#include "EmuAudioSource.h"
+//#include "EmuAudioSource.h"
 //int main()
 //{
 //    //EmuAudioSource source;
@@ -18,13 +18,13 @@
 //#define MINIAUDIO_IMPLEMENTATION
 //#include "miniaudio.h"
 
-#include "libgme/gme.h"
-#include "libgme/Music_Emu.h"
+//#include "libgme/gme.h"
+//#include "libgme/Music_Emu.h"
 
-#include <stdio.h>
-#include <vector>
+//#include <stdio.h>
+//#include <vector>
 
-#include "../include/emusound.h"
+//#include "../include/emusound.h"
 #include "ProgramManager.h"
 
 std::string m_track_info;
@@ -309,7 +309,7 @@ int emuprogramExample(int argc, char** argv)
     std::string title = "emusound demo";
     sf::ContextSettings settings;
     settings.antialiasingLevel = 0;
-    audiodemo::ProgramManager program(title, sf::Vector2i(400 * 4, 240 * 4), sf::Vector2i(400, 240), sf::Style::Titlebar, settings);
+    esnddemo::ProgramManager program(title, sf::Vector2i(400 * 4, 240 * 4), sf::Vector2i(400, 240), sf::Style::Titlebar, settings);
     //program.setZoomValue(1.f);
     program.initialize();
     program.run();

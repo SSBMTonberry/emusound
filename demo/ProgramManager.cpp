@@ -175,77 +175,77 @@ void esnddemo::ProgramManager::drawEmuStreamForm()
 
 void esnddemo::ProgramManager::drawAudioManagerForm()
 {
-    ImGui::Begin("AudioManager");
-    std::vector<std::string> sounds = AudioManager::get()->getSoundIdList();
-    std::vector<std::string> music = AudioManager::get()->getMusicIdList();
-    std::vector<std::string> emuStreams = AudioManager::get()->getEmuStreamIdList();
-
-    ImGui::Text("SOUNDS:");
-    for(const auto &str : sounds)
-    {
-        ImGui::Text(str.c_str()); ImGui::SameLine();
-        std::string play = fmt::format("Play###play_sound_{0}", str);
-        std::string stop = fmt::format("Stop###stop_sound_{0}", str);
-        std::string remove = fmt::format("Remove###remove_sound_{0}", str);
-
-        if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getSound(str)->play();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(stop.c_str()))  AudioManager::get()->getSound(str)->stop();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeSound(str);
-        //ImGui::SameLine();
-        //if (ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack();
-        //ImGui::SameLine();
-        //if (ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
-    }
-
-    ImGui::Text("MUSIC:");
-    for(const auto &str : music)
-    {
-        ImGui::Text(str.c_str()); ImGui::SameLine();
-        std::string play = fmt::format("Play###play_music_{0}", str);
-        std::string stop = fmt::format("Stop###stop_music_{0}", str);
-        std::string remove = fmt::format("Remove###remove_music_{0}", str);
-
-        if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getMusic(str)->play();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(stop.c_str()))  AudioManager::get()->getMusic(str)->stop();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeMusic(str);
-        //ImGui::SameLine();
-        //if (ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack();
-        //ImGui::SameLine();
-        //if (ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
-    }
-
-    //SPC
-    ImGui::Text("EMU-STREAMS:");
-    for(const auto &str : emuStreams)
-    {
-        ImGui::Text(str.c_str()); ImGui::SameLine();
-        std::string play = fmt::format("Play###play_emu_{0}", str);
-        std::string stop = fmt::format("Stop###stop_emu_{0}", str);
-        std::string prev = fmt::format("<-###prev_emu_{0}", str);
-        std::string next = fmt::format("->###next_emu_{0}", str);
-        std::string remove = fmt::format("Remove###remove_emu_{0}", str);
-
-        if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getEmuStream(str)->play();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(stop.c_str())) AudioManager::get()->getEmuStream(str)->stop();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(prev.c_str())) AudioManager::get()->getEmuStream(str)->previousTrack();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(next.c_str())) AudioManager::get()->getEmuStream(str)->nextTrack();
-        ImGui::SameLine();
-        if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeEmuStream(str);
-    }
-    //if(ImGui::Button("STOP!", {100, 40}))
+    //ImGui::Begin("AudioManager");
+    //std::vector<std::string> sounds = AudioManager::get()->getSoundIdList();
+    //std::vector<std::string> music = AudioManager::get()->getMusicIdList();
+    //std::vector<std::string> emuStreams = AudioManager::get()->getEmuStreamIdList();
+//
+    //ImGui::Text("SOUNDS:");
+    //for(const auto &str : sounds)
     //{
-    //    m_nsfeDemo.stop();
-    //    m_nsfDemo.stop();
-    //    m_spcDemo.stop();
-    //    m_vgmDemo.stop();
+    //    ImGui::Text(str.c_str()); ImGui::SameLine();
+    //    std::string play = fmt::format("Play###play_sound_{0}", str);
+    //    std::string stop = fmt::format("Stop###stop_sound_{0}", str);
+    //    std::string remove = fmt::format("Remove###remove_sound_{0}", str);
+//
+    //    if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getSound(str)->play();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(stop.c_str()))  AudioManager::get()->getSound(str)->stop();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeSound(str);
+    //    //ImGui::SameLine();
+    //    //if (ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack();
+    //    //ImGui::SameLine();
+    //    //if (ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
     //}
-
-    ImGui::End();
+//
+    //ImGui::Text("MUSIC:");
+    //for(const auto &str : music)
+    //{
+    //    ImGui::Text(str.c_str()); ImGui::SameLine();
+    //    std::string play = fmt::format("Play###play_music_{0}", str);
+    //    std::string stop = fmt::format("Stop###stop_music_{0}", str);
+    //    std::string remove = fmt::format("Remove###remove_music_{0}", str);
+//
+    //    if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getMusic(str)->play();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(stop.c_str()))  AudioManager::get()->getMusic(str)->stop();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeMusic(str);
+    //    //ImGui::SameLine();
+    //    //if (ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack();
+    //    //ImGui::SameLine();
+    //    //if (ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
+    //}
+//
+    ////SPC
+    //ImGui::Text("EMU-STREAMS:");
+    //for(const auto &str : emuStreams)
+    //{
+    //    ImGui::Text(str.c_str()); ImGui::SameLine();
+    //    std::string play = fmt::format("Play###play_emu_{0}", str);
+    //    std::string stop = fmt::format("Stop###stop_emu_{0}", str);
+    //    std::string prev = fmt::format("<-###prev_emu_{0}", str);
+    //    std::string next = fmt::format("->###next_emu_{0}", str);
+    //    std::string remove = fmt::format("Remove###remove_emu_{0}", str);
+//
+    //    if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getEmuStream(str)->play();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(stop.c_str())) AudioManager::get()->getEmuStream(str)->stop();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(prev.c_str())) AudioManager::get()->getEmuStream(str)->previousTrack();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(next.c_str())) AudioManager::get()->getEmuStream(str)->nextTrack();
+    //    ImGui::SameLine();
+    //    if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeEmuStream(str);
+    //}
+    ////if(ImGui::Button("STOP!", {100, 40}))
+    ////{
+    ////    m_nsfeDemo.stop();
+    ////    m_nsfDemo.stop();
+    ////    m_spcDemo.stop();
+    ////    m_vgmDemo.stop();
+    ////}
+//
+    //ImGui::End();
 }
