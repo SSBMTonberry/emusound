@@ -34,22 +34,30 @@ void esnddemo::ProgramManager::initializeEmuStream()
     m_nsfeDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_nsfeDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_nsfeDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+    m_nsfeDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
+    m_nsfeDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
 
     m_nsfDemo.loadFromMemory((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
     m_nsfDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_nsfDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_nsfDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+    m_nsfDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
+    m_nsfDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
 
     //m_nsfDemo.loadFromFile(nsfPath);
     m_spcDemo.loadFromFile(spcPath);
     m_spcDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_spcDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_spcDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+    m_spcDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
+    m_spcDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
 
     m_vgmDemo.loadFromFile(vgmPath);
     m_vgmDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_vgmDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_vgmDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+    m_vgmDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
+    m_vgmDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
 
 
 }
@@ -292,6 +300,10 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
     ImGui::Text(filter->getId().c_str());
     switch(filter->getFilterType())
     {
+        case esnd::FilterType::Biquad:
+            handleBiquadFilter(dynamic_cast<esnd::BiquadFilter*>(filter));
+            break;
+
         case esnd::FilterType::LowpassFirstOrder:
             handleLowpassFilter1(dynamic_cast<esnd::LowpassFilter1*>(filter));
             break;
@@ -300,8 +312,12 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
             handleLowpassFilter2(dynamic_cast<esnd::LowpassFilter2*>(filter));
             break;
 
-        case esnd::FilterType::Biquad:
-            handleBiquadFilter(dynamic_cast<esnd::BiquadFilter*>(filter));
+        case esnd::FilterType::HighpassFirstOrder:
+            handleHighpassFilter1(dynamic_cast<esnd::HighpassFilter1*>(filter));
+            break;
+
+        case esnd::FilterType::HighpassSecondOrder:
+            handleHighpassFilter2(dynamic_cast<esnd::HighpassFilter2*>(filter));
             break;
     }
 
@@ -377,6 +393,53 @@ void esnddemo::ProgramManager::handleBiquadFilter(esnd::BiquadFilter *filter)
         filter->config.b0 = b[0];
         filter->config.b1 = b[1];
         filter->config.b2 = b[2];
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###active{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleHighpassFilter1(esnd::HighpassFilter1 *filter)
+{
+    double min = 200;
+    double max = 5000.0;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###cutoff{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###active{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleHighpassFilter2(esnd::HighpassFilter2 *filter)
+{
+    double min = 200, min_q = 0;
+    double max = 5000.0, max_q = 2;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###cutoff{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("q###q{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.q, 1, &min_q, &max_q))
+    {
         filter->refresh();
     }
     ImGui::PopItemWidth();
