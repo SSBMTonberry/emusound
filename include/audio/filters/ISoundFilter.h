@@ -6,6 +6,7 @@
 #define EMUSOUND_ISOUNDFILTER_H
 
 #include <cstddef>
+#include <string>
 #include "../../external/emusound_external.h"
 #include "../../Enums.hpp"
 

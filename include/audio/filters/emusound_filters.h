@@ -5,6 +5,7 @@
 #ifndef EMUSOUND_EMUSOUND_FILTERS_H
 #define EMUSOUND_EMUSOUND_FILTERS_H
 
+#include "BiquadFilter.hpp"
 #include "LowpassFilter1.hpp"
 #include "LowpassFilter2.hpp"
 

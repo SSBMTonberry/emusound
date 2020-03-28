@@ -41,6 +41,7 @@ namespace esnddemo
             void manageFilter(esnd::ISoundFilter *filter);
             void handleLowpassFilter1(esnd::LowpassFilter1 *filter);
             void handleLowpassFilter2(esnd::LowpassFilter2 *filter);
+            void handleBiquadFilter(esnd::BiquadFilter *filter);
 
             sf::RenderWindow m_window;
 

@@ -2,6 +2,7 @@
 // Created by robin on 28.03.2020.
 //
 
+#include <audio/filters/BiquadFilter.hpp>
 #include "ProgramManager.h"
 
 esnddemo::ProgramManager::ProgramManager(const std::string &title, const sf::Vector2i &windowSize, const sf::Vector2i &resolution, int style,
@@ -30,19 +31,23 @@ void esnddemo::ProgramManager::initializeEmuStream()
     std::string vgmPath =   "./../../content/emu_tests/test.vgm";
 
     esnd::StreamLoadStatus status1 = m_nsfeDemo.loadFromFile(nsfePath);
+    m_nsfeDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_nsfeDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_nsfeDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
 
     m_nsfDemo.loadFromMemory((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
+    m_nsfDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_nsfDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_nsfDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
 
     //m_nsfDemo.loadFromFile(nsfPath);
     m_spcDemo.loadFromFile(spcPath);
+    m_spcDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_spcDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_spcDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
 
     m_vgmDemo.loadFromFile(vgmPath);
+    m_vgmDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
     m_vgmDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
     m_vgmDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
 
@@ -294,6 +299,10 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
         case esnd::FilterType::LowpassSecondOrder:
             handleLowpassFilter2(dynamic_cast<esnd::LowpassFilter2*>(filter));
             break;
+
+        case esnd::FilterType::Biquad:
+            handleBiquadFilter(dynamic_cast<esnd::BiquadFilter*>(filter));
+            break;
     }
 
 }
@@ -304,14 +313,14 @@ void esnddemo::ProgramManager::handleLowpassFilter1(esnd::LowpassFilter1 *filter
     double max = 1000.0;
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###cutoff{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
     {
         filter->refresh();
     }
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::Checkbox(fmt::format("active###{0}", filter->getId()).c_str(), &filter->isActive))
+    if(ImGui::Checkbox(fmt::format("active###active{0}", filter->getId()).c_str(), &filter->isActive))
     {
 
     }
@@ -324,21 +333,56 @@ void esnddemo::ProgramManager::handleLowpassFilter2(esnd::LowpassFilter2 *filter
     double max = 1000.0, max_q = 2;
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###cutoff{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
     {
         filter->refresh();
     }
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::SliderScalarN(fmt::format("q###{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.q, 1, &min_q, &max_q))
+    if(ImGui::SliderScalarN(fmt::format("q###q{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.q, 1, &min_q, &max_q))
     {
         filter->refresh();
     }
     ImGui::PopItemWidth();
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
-    if(ImGui::Checkbox(fmt::format("active###{0}", filter->getId()).c_str(), &filter->isActive))
+    if(ImGui::Checkbox(fmt::format("active###active{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleBiquadFilter(esnd::BiquadFilter *filter)
+{
+    double min = 0.01;
+    double max = 1000.0;
+    double a[3] {filter->config.a0, filter->config.a1, filter->config.a2};
+    double b[3] {filter->config.b0, filter->config.b1, filter->config.b2};
+    ImGui::SameLine();
+    ImGui::PushItemWidth(200);
+    if(ImGui::SliderScalarN(fmt::format("a###a{0}", filter->getId()).c_str(), ImGuiDataType_Double, &a, 3, &min, &max))
+    {
+        filter->config.a0 = a[0];
+        filter->config.a1 = a[1];
+        filter->config.a2 = a[2];
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(200);
+    if(ImGui::SliderScalarN(fmt::format("b###b{0}", filter->getId()).c_str(), ImGuiDataType_Double, &b, 3, &min, &max))
+    {
+        filter->config.b0 = b[0];
+        filter->config.b1 = b[1];
+        filter->config.b2 = b[2];
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###active{0}", filter->getId()).c_str(), &filter->isActive))
     {
 
     }
