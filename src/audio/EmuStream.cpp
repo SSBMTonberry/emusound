@@ -254,10 +254,10 @@ void esnd::EmuStream::setTrack(int track)
     }
 }
 
-void esnd::EmuStream::setId(const std::string &id)
-{
-    m_id = id;
-}
+//void esnd::EmuStream::setId(const std::string &id)
+//{
+//    m_id = id;
+//}
 
 void esnd::EmuStream::setNumberOfPlays(int numberOfPlays)
 {
@@ -345,10 +345,10 @@ int esnd::EmuStream::getNumberOfTracks() const
     return m_numberOfTracks;
 }
 
-const std::string &esnd::EmuStream::getId() const
-{
-    return m_id;
-}
+//const std::string &esnd::EmuStream::getId() const
+//{
+//    return m_id;
+//}
 
 int esnd::EmuStream::getNumberOfPlays() const
 {

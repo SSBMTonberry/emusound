@@ -33,7 +33,7 @@ namespace esnd
 
             void setTempo(float tempo);
             void setTrack(int track);
-            void setId(const std::string &id);
+            //void setId(const std::string &id);
             void setNumberOfPlays(int numberOfPlays);
             void incrementNumberOfPlays();
 
@@ -55,7 +55,7 @@ namespace esnd
             void *getData() const;
             size_t getDataSize() const;
             int getNumberOfTracks() const;
-            const std::string &getId() const;
+            //const std::string &getId() const override;
             int getNumberOfPlays() const;
             const EmuConfig &getConfig() const;
 
@@ -108,7 +108,7 @@ namespace esnd
             /*! The track loaded. 0 is the first track */
             int m_track = 0;
 
-            std::string m_id;
+
             std::string m_filename; //if loaded by file
             void *m_data; //If loaded by memory
             size_t m_dataSize; //If loaded by memory

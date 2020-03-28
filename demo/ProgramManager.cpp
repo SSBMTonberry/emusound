@@ -30,36 +30,19 @@ void esnddemo::ProgramManager::initializeEmuStream()
     std::string spcPath =   "./../../content/emu_tests/test.spc";
     std::string vgmPath =   "./../../content/emu_tests/test.vgm";
 
-    esnd::StreamLoadStatus status1 = m_nsfeDemo.loadFromFile(nsfePath);
-    m_nsfeDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
-    m_nsfeDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
-    m_nsfeDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
-    m_nsfeDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
-    m_nsfeDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>(nsfePath)).operator*().setId("NSFE");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE)).operator*().setId("NSF ");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>(spcPath)).operator*().setId("SPC ");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>(vgmPath)).operator*().setId("VGM ");
 
-    m_nsfDemo.loadFromMemory((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
-    m_nsfDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
-    m_nsfDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
-    m_nsfDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
-    m_nsfDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
-    m_nsfDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
-
-    //m_nsfDemo.loadFromFile(nsfPath);
-    m_spcDemo.loadFromFile(spcPath);
-    m_spcDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
-    m_spcDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
-    m_spcDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
-    m_spcDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
-    m_spcDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
-
-    m_vgmDemo.loadFromFile(vgmPath);
-    m_vgmDemo.addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
-    m_vgmDemo.addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
-    m_vgmDemo.addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
-    m_vgmDemo.addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
-    m_vgmDemo.addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
-
-
+    for(auto &stream : m_streams)
+    {
+        stream->addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
+        stream->addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
+        stream->addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+        stream->addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
+        stream->addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
+    }
 }
 
 void esnddemo::ProgramManager::initializeAudioManager()
@@ -162,124 +145,30 @@ void esnddemo::ProgramManager::drawForms()
 void esnddemo::ProgramManager::drawEmuStreamForm()
 {
     ImGui::Begin("Audio");
-    //NSFE
-    ImGui::Text("NSFE"); ImGui::SameLine();
-    if(ImGui::SmallButton("Play")) m_nsfeDemo.play(); ImGui::SameLine();
-    if(ImGui::SmallButton("Stop")) m_nsfeDemo.stop(); ImGui::SameLine();
-    if(ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->")) m_nsfeDemo.nextTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("Filter")) m_streamForFilter = &m_nsfeDemo;
-
-    //NSF
-    ImGui::Text("NSF "); ImGui::SameLine();
-    if(ImGui::SmallButton("Play###NSFPlay")) m_nsfDemo.play(); ImGui::SameLine();
-    if(ImGui::SmallButton("Stop###NSFStop")) m_nsfDemo.stop(); ImGui::SameLine();
-    if(ImGui::SmallButton("<-###NSF<-")) m_nsfDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->###NSF->")) m_nsfDemo.nextTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("Filter###NSF_filter")) m_streamForFilter = &m_nsfDemo;
-
-    //SPC
-    ImGui::Text("SPC "); ImGui::SameLine();
-    if(ImGui::SmallButton("Play###SPCPlay")) m_spcDemo.play(); ImGui::SameLine();
-    if(ImGui::SmallButton("Stop###SPCStop")) m_spcDemo.stop(); ImGui::SameLine();
-    if(ImGui::SmallButton("<-###SPC<-")) m_spcDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->###SPC->")) m_spcDemo.nextTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("Filter###SPC_filter")) m_streamForFilter = &m_spcDemo;
-
-    //VGM
-    ImGui::Text("VGM "); ImGui::SameLine();
-    if(ImGui::SmallButton("Play###VGMPlay")) m_vgmDemo.play(); ImGui::SameLine();
-    if(ImGui::SmallButton("Stop###VGMStop")) m_vgmDemo.stop(); ImGui::SameLine();
-    if(ImGui::SmallButton("<-###VGM<-")) m_vgmDemo.previousTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("->###VGM->")) m_vgmDemo.nextTrack(); ImGui::SameLine();
-    if(ImGui::SmallButton("Filter###VGM_filter")) m_streamForFilter = &m_vgmDemo;
+    for(auto &stream : m_streams)
+    {
+        esnd::EmuStream *emuStream = dynamic_cast<esnd::EmuStream*>(stream.get());
+        ImGui::Text(emuStream->getId().c_str()); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Play###Play{0}", emuStream->getId()).c_str())) emuStream->play(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Stop###Stop{0}", emuStream->getId()).c_str())) emuStream->stop(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("<-###<-{0}", emuStream->getId()).c_str())) emuStream->previousTrack(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("->###->{0}", emuStream->getId()).c_str())) emuStream->nextTrack(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Filter###Filter{0}", emuStream->getId()).c_str())) m_streamForFilter = emuStream;
+    }
 
     if(ImGui::Button("STOP!", {100, 40}))
     {
-        m_nsfeDemo.stop();
-        m_nsfDemo.stop();
-        m_spcDemo.stop();
-        m_vgmDemo.stop();
+        for(auto &stream : m_streams)
+            stream->stop();
     }
+
 
     ImGui::End();
 }
 
 void esnddemo::ProgramManager::drawAudioManagerForm()
 {
-    //ImGui::Begin("AudioManager");
-    //std::vector<std::string> sounds = AudioManager::get()->getSoundIdList();
-    //std::vector<std::string> music = AudioManager::get()->getMusicIdList();
-    //std::vector<std::string> emuStreams = AudioManager::get()->getEmuStreamIdList();
-//
-    //ImGui::Text("SOUNDS:");
-    //for(const auto &str : sounds)
-    //{
-    //    ImGui::Text(str.c_str()); ImGui::SameLine();
-    //    std::string play = fmt::format("Play###play_sound_{0}", str);
-    //    std::string stop = fmt::format("Stop###stop_sound_{0}", str);
-    //    std::string remove = fmt::format("Remove###remove_sound_{0}", str);
-//
-    //    if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getSound(str)->play();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(stop.c_str()))  AudioManager::get()->getSound(str)->stop();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeSound(str);
-    //    //ImGui::SameLine();
-    //    //if (ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack();
-    //    //ImGui::SameLine();
-    //    //if (ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
-    //}
-//
-    //ImGui::Text("MUSIC:");
-    //for(const auto &str : music)
-    //{
-    //    ImGui::Text(str.c_str()); ImGui::SameLine();
-    //    std::string play = fmt::format("Play###play_music_{0}", str);
-    //    std::string stop = fmt::format("Stop###stop_music_{0}", str);
-    //    std::string remove = fmt::format("Remove###remove_music_{0}", str);
-//
-    //    if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getMusic(str)->play();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(stop.c_str()))  AudioManager::get()->getMusic(str)->stop();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeMusic(str);
-    //    //ImGui::SameLine();
-    //    //if (ImGui::SmallButton("<-")) m_nsfeDemo.previousTrack();
-    //    //ImGui::SameLine();
-    //    //if (ImGui::SmallButton("->")) m_nsfeDemo.nextTrack();
-    //}
-//
-    ////SPC
-    //ImGui::Text("EMU-STREAMS:");
-    //for(const auto &str : emuStreams)
-    //{
-    //    ImGui::Text(str.c_str()); ImGui::SameLine();
-    //    std::string play = fmt::format("Play###play_emu_{0}", str);
-    //    std::string stop = fmt::format("Stop###stop_emu_{0}", str);
-    //    std::string prev = fmt::format("<-###prev_emu_{0}", str);
-    //    std::string next = fmt::format("->###next_emu_{0}", str);
-    //    std::string remove = fmt::format("Remove###remove_emu_{0}", str);
-//
-    //    if (ImGui::SmallButton(play.c_str())) AudioManager::get()->getEmuStream(str)->play();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(stop.c_str())) AudioManager::get()->getEmuStream(str)->stop();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(prev.c_str())) AudioManager::get()->getEmuStream(str)->previousTrack();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(next.c_str())) AudioManager::get()->getEmuStream(str)->nextTrack();
-    //    ImGui::SameLine();
-    //    if (ImGui::SmallButton(remove.c_str()))  AudioManager::get()->removeEmuStream(str);
-    //}
-    ////if(ImGui::Button("STOP!", {100, 40}))
-    ////{
-    ////    m_nsfeDemo.stop();
-    ////    m_nsfDemo.stop();
-    ////    m_spcDemo.stop();
-    ////    m_vgmDemo.stop();
-    ////}
-//
-    //ImGui::End();
+
 }
 
 void esnddemo::ProgramManager::drawFilterForm()

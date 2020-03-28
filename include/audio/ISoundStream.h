@@ -51,6 +51,16 @@ namespace esnd
 
             [[nodiscard]] virtual SoundStatus getStatus() const = 0;
 
+            void setId(const std::string &id)
+            {
+                m_id = id;
+            }
+
+            const std::string &getId() const
+            {
+                return m_id;
+            }
+
             template <typename T, typename... Args>
             T * addFilter(Args &&... args);
 
@@ -81,6 +91,7 @@ namespace esnd
             virtual void onGetData(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount) = 0;
 
             std::vector<std::unique_ptr<ISoundFilter>> m_filters;
+            std::string m_id;
     };
 
     template<typename T, typename... Args>

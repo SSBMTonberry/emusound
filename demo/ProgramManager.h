@@ -47,6 +47,7 @@ namespace esnddemo
 
             sf::RenderWindow m_window;
 
+            std::vector<std::unique_ptr<esnd::ISoundStream>> m_streams;
             //Audio
             esnd::EmuStream m_nsfeDemo;
             esnd::EmuStream m_nsfDemo;
