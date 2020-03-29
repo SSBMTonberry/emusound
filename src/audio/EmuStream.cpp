@@ -47,6 +47,29 @@ ma_bool32 esnd::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_ori
     return stream->onSeek(pDecoder, byteOffset, origin);
 }
 
+esnd::EmuStream::EmuStream(const std::string &id, const std::string &filename, int track, uint32_t channels, uint32_t sampleRate)
+{
+    m_id = id;
+    loadFromFile(filename, track, channels, sampleRate);
+}
+
+esnd::EmuStream::EmuStream(const std::string &id, void *data, size_t size, int track, uint32_t channels, uint32_t sampleRate)
+{
+    m_id = id;
+    loadFromMemory(data, size, track, channels, sampleRate);
+}
+
+esnd::EmuStream::EmuStream(const std::string &filename, int track, uint32_t channels, uint32_t sampleRate)
+{
+    loadFromFile(filename, track, channels, sampleRate);
+}
+
+esnd::EmuStream::EmuStream(void *data, size_t size, int track, uint32_t channels, uint32_t sampleRate)
+{
+    loadFromMemory(data, size, track, channels, sampleRate);
+}
+
+
 
 esnd::EmuStream::~EmuStream()
 {
@@ -60,17 +83,6 @@ esnd::EmuStream::~EmuStream()
         delete m_emu;
         m_emu = nullptr;
     }
-}
-
-
-esnd::EmuStream::EmuStream(const std::string &filename, int track, uint32_t channels, uint32_t sampleRate)
-{
-    loadFromFile(filename, track, channels, sampleRate);
-}
-
-esnd::EmuStream::EmuStream(void *data, size_t size, int track, uint32_t channels, uint32_t sampleRate)
-{
-    loadFromMemory(data, size, track, channels, sampleRate);
 }
 
 esnd::StreamLoadStatus esnd::EmuStream::initialize()

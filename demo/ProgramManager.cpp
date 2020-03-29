@@ -30,18 +30,19 @@ void esnddemo::ProgramManager::initializeEmuStream()
     std::string spcPath =   "./../../content/emu_tests/test.spc";
     std::string vgmPath =   "./../../content/emu_tests/test.vgm";
 
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>(nsfePath)).operator*().setId("NSFE");
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>((void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE)).operator*().setId("NSF ");
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>(spcPath)).operator*().setId("SPC ");
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>(vgmPath)).operator*().setId("VGM ");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("NSFE", nsfePath));//.operator*().setId("NSFE");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("NSF ", (void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE));//.operator*().setId("NSF ");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("SPC ", spcPath));//.operator*().setId("SPC ");
+    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("VGM ", vgmPath));//.operator*().setId("VGM ");
 
     for(auto &stream : m_streams)
     {
-        stream->addFilter<esnd::BiquadFilter>("Biquad:")->isActive = false;
-        stream->addFilter<esnd::LowpassFilter1>("Lowpass 1:", 200)->isActive = false;
-        stream->addFilter<esnd::LowpassFilter2>("Lowpass 2:", 200, 1)->isActive = false;
+        stream->addFilter<esnd::BiquadFilter>(   "Biquad:    ")->isActive = false;
+        stream->addFilter<esnd::LowpassFilter1>( "Lowpass 1: ", 200)->isActive = false;
+        stream->addFilter<esnd::LowpassFilter2>( "Lowpass 2: ", 200, 1)->isActive = false;
         stream->addFilter<esnd::HighpassFilter1>("Highpass 1:", 1000)->isActive = false;
         stream->addFilter<esnd::HighpassFilter2>("Highpass 2:", 1000, 1)->isActive = false;
+        stream->addFilter<esnd::BandpassFilter>( "Bandpass:  ", 200, 1)->isActive = false;
     }
 }
 
@@ -208,6 +209,10 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
         case esnd::FilterType::HighpassSecondOrder:
             handleHighpassFilter2(dynamic_cast<esnd::HighpassFilter2*>(filter));
             break;
+
+        case esnd::FilterType::BandpassSecondOrder:
+            handleBandpassFilter(dynamic_cast<esnd::BandpassFilter*>(filter));
+            break;
     }
 
 }
@@ -318,6 +323,33 @@ void esnddemo::ProgramManager::handleHighpassFilter2(esnd::HighpassFilter2 *filt
 {
     double min = 200, min_q = 0;
     double max = 5000.0, max_q = 2;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###cutoff{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("q###q{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.q, 1, &min_q, &max_q))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###active{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleBandpassFilter(esnd::BandpassFilter *filter)
+{
+    double min = 50, min_q = 0.01;
+    double max = 2500.0, max_q = 2;
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
     if(ImGui::SliderScalarN(fmt::format("cutoffFrequency###cutoff{0}", filter->getId()).c_str(), ImGuiDataType_Double, &filter->config.cutoffFrequency, 1, &min, &max))

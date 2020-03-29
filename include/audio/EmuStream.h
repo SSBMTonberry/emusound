@@ -26,6 +26,9 @@ namespace esnd
             EmuStream(const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
             EmuStream(void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
 
+            EmuStream(const std::string &id, const std::string &filename, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            EmuStream(const std::string &id, void *data, size_t size, int track = 0, uint32_t channels = 2, uint32_t sampleRate = 44100);
+
             void muteChannel(int channelNo, bool mute);
 
             void toggleMuteChannel(int channelNo);
