@@ -76,12 +76,12 @@ esnd::EmuStream::~EmuStream()
     //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
     if(m_emu != nullptr)
     {
-        ma_device_uninit(&m_config.device);
-        ma_decoder_uninit(&m_config.decoder);
-
         m_isShuttingDown = true;
         delete m_emu;
         m_emu = nullptr;
+
+        ma_device_uninit(&m_config.device);
+        ma_decoder_uninit(&m_config.decoder);
     }
 }
 

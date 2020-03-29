@@ -12,5 +12,6 @@
 #include "HighpassFilter2.hpp"
 #include "BandpassFilter.hpp"
 #include "PeakingEqFilter.hpp"
+#include "NotchingFilter.hpp"
 
 #endif //EMUSOUND_EMUSOUND_FILTERS_H

@@ -44,6 +44,7 @@ void esnddemo::ProgramManager::initializeEmuStream()
         stream->addFilter<esnd::HighpassFilter2>( "Highpass 2: ", 1000, 1)->isActive = false;
         stream->addFilter<esnd::BandpassFilter>(  "Bandpass:   ", 200, 1)->isActive = false;
         stream->addFilter<esnd::PeakingEqFilter>( "Peaking EQ: ", 1, 1, 1000)->isActive = false;
+        stream->addFilter<esnd::NotchingFilter>(  "Notching:   ", 1, 1000)->isActive = false;
     }
 }
 
@@ -217,6 +218,10 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
 
         case esnd::FilterType::PeakingEqSecondOrder:
             handlePeakingEqFilter(dynamic_cast<esnd::PeakingEqFilter*>(filter));
+            break;
+
+        case esnd::FilterType::NotchingSecondOrder:
+            handleNotchingFilter(dynamic_cast<esnd::NotchingFilter*>(filter));
             break;
     }
 
@@ -409,6 +414,35 @@ void esnddemo::ProgramManager::handlePeakingEqFilter(esnd::PeakingEqFilter *filt
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
     if(ImGui::Checkbox(fmt::format("active###activepeakeq{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleNotchingFilter(esnd::NotchingFilter *filter)
+{
+    double min_q = 0.01, min_frequency = 100;
+    double max_q = 5, max_frequency = 5000.0;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("q###qnotching{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.q, 1, &min_q, &max_q))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("frequency###frequencynotching{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.frequency, 1, &min_frequency, &max_frequency))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###activenotching{0}", filter->getId()).c_str(), &filter->isActive))
     {
 
     }
