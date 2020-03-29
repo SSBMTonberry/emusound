@@ -7,7 +7,7 @@
 
 
 
-void esnd::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
+void esnd::emucb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
 
     //ma_decoder* pDecoder = (ma_decoder*)pDevice->pUserData;
@@ -23,7 +23,7 @@ void esnd::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput,
     (void)pInput;
 }
 
-size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
+size_t esnd::emucb::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 {
     //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
     esnd::EmuStream *stream = (esnd::EmuStream*)pDecoder->pUserData;
@@ -37,7 +37,7 @@ size_t esnd::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytes
     return 0;
 }
 
-ma_bool32 esnd::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
+ma_bool32 esnd::emucb::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
 {
     //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
     esnd::EmuStream *stream = (esnd::EmuStream*)pDecoder->pUserData;
@@ -98,7 +98,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
     if(emustats != esnd::StreamLoadStatus::OK)
         return emustats;
 
-    m_decoderInitStatus = ma_decoder_init_raw(onReadCallback, onSeekCallback, &m_config.decoder,
+    m_decoderInitStatus = ma_decoder_init_raw(esnd::emucb::onReadCallback, esnd::emucb::onSeekCallback, &m_config.decoder,
                                               &m_config.dec_config_in, &m_config.dec_config_out, &m_config.decoder);
 
     if (m_decoderInitStatus != MA_SUCCESS) {
@@ -111,7 +111,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
     m_config.deviceConfig.playback.format   = m_config.decoder.outputFormat;
     m_config.deviceConfig.playback.channels = m_config.decoder.outputChannels;
     m_config.deviceConfig.sampleRate        = m_config.decoder.outputSampleRate;
-    m_config.deviceConfig.dataCallback      = onDataCallback;
+    m_config.deviceConfig.dataCallback      = esnd::emucb::onDataCallback;
     m_config.deviceConfig.pUserData         = this;//&m_config.decoder;
 
     if (ma_device_init(NULL, &m_config.deviceConfig, &m_config.device) != MA_SUCCESS) {

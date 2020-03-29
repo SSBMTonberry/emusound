@@ -100,7 +100,7 @@ set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/
         src/audio/EmuStream.cpp include/audio/EmuStream.h include/Enums.hpp
         src/audio/EmuVoice.cpp include/audio/EmuVoice.h include/audio/EmuConfig.hpp
         include/emusound.h include/audio/filters/ISoundFilter.h
-        include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h src/external/emusound_external.cpp include/audio/filters/BiquadFilter.hpp include/audio/filters/HighpassFilter1.hpp include/audio/filters/HighpassFilter2.hpp include/audio/filters/BandpassFilter.hpp include/audio/filters/PeakingEqFilter.hpp include/audio/filters/NotchingFilter.hpp include/audio/filters/LowshelfFilter.hpp include/audio/filters/HighshelfFilter.hpp)
+        include/audio/filters/LowpassFilter1.hpp include/audio/filters/emusound_filters.h src/external/emusound_external.cpp include/audio/filters/BiquadFilter.hpp include/audio/filters/HighpassFilter1.hpp include/audio/filters/HighpassFilter2.hpp include/audio/filters/BandpassFilter.hpp include/audio/filters/PeakingEqFilter.hpp include/audio/filters/NotchingFilter.hpp include/audio/filters/LowshelfFilter.hpp include/audio/filters/HighshelfFilter.hpp src/audio/Waveform.cpp include/audio/Waveform.h include/audio/WaveformConfig.hpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/external_libs/source/
         ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src)

@@ -5,6 +5,8 @@
 #ifndef EMUSOUND_ENUMS_HPP
 #define EMUSOUND_ENUMS_HPP
 
+#include "external/emusound_external.h"
+
 namespace esnd
 {
     enum class SoundStatus
@@ -17,6 +19,7 @@ namespace esnd
     /*!
      * 0 - 99 = General
      * 100 - 199 = Emu related
+     * 200 - 299 = Waveform related
      */
     enum class StreamLoadStatus
     {
@@ -32,7 +35,11 @@ namespace esnd
         EmuUnsupportedMusicType = 103,
         EmuInvalidSampleRate = 104,
         EmuInvalidTrack = 105,
-        EmuErrorLoadingTrackData = 106
+        EmuErrorLoadingTrackData = 106,
+
+        WaveformInitError = 200,
+        WaveformDeviceError = 201,
+        WaveformStartupFailure = 202
     };
 
     enum class StreamMode
@@ -60,6 +67,14 @@ namespace esnd
         HighshelfSecondOrder = 13,      //ma_hishelf2
 
         Custom = 999
+    };
+
+    enum class WaveformType
+    {
+        Sine = ma_waveform_type_sine,
+        Square = ma_waveform_type_square,
+        Triangle = ma_waveform_type_triangle,
+        Sawtooth = ma_waveform_type_sawtooth
     };
 }
 

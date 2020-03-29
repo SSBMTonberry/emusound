@@ -14,10 +14,12 @@
 
 namespace esnd
 {
-    inline void onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
-    inline size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
-    inline ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
-
+    namespace emucb
+    {
+        inline void onDataCallback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
+        inline size_t onReadCallback(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead);
+        inline ma_bool32 onSeekCallback(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin);
+    }
     class EmuStream : public ISoundStream
     {
         public:
@@ -83,9 +85,9 @@ namespace esnd
             [[nodiscard]] uint32_t getChannelCount() const override;
             [[nodiscard]] uint32_t getSampleRate() const override;
 
-            friend void onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
-            friend size_t onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
-            friend ma_bool32 onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
+            friend void emucb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
+            friend size_t emucb::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
+            friend ma_bool32 emucb::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
 
         protected:
             StreamLoadStatus initialize();
