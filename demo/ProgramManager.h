@@ -45,6 +45,7 @@ namespace esnddemo
             void handleHighpassFilter1(esnd::HighpassFilter1 *filter);
             void handleHighpassFilter2(esnd::HighpassFilter2 *filter);
             void handleBandpassFilter(esnd::BandpassFilter *filter);
+            void handlePeakingEqFilter(esnd::PeakingEqFilter *filter);
 
 
             sf::RenderWindow m_window;
