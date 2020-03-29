@@ -13,5 +13,7 @@
 #include "BandpassFilter.hpp"
 #include "PeakingEqFilter.hpp"
 #include "NotchingFilter.hpp"
+#include "LowshelfFilter.hpp"
+#include "HighshelfFilter.hpp"
 
 #endif //EMUSOUND_EMUSOUND_FILTERS_H

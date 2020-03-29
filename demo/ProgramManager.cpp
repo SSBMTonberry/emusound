@@ -45,6 +45,8 @@ void esnddemo::ProgramManager::initializeEmuStream()
         stream->addFilter<esnd::BandpassFilter>(  "Bandpass:   ", 200, 1)->isActive = false;
         stream->addFilter<esnd::PeakingEqFilter>( "Peaking EQ: ", 1, 1, 1000)->isActive = false;
         stream->addFilter<esnd::NotchingFilter>(  "Notching:   ", 1, 1000)->isActive = false;
+        stream->addFilter<esnd::LowshelfFilter>(  "Lowshelf:   ", 5, 1, 1000)->isActive = false;
+        stream->addFilter<esnd::HighshelfFilter>( "Highshelf:  ", 5, 1, 1000)->isActive = false;
     }
 }
 
@@ -223,8 +225,51 @@ void esnddemo::ProgramManager::manageFilter(esnd::ISoundFilter *filter)
         case esnd::FilterType::NotchingSecondOrder:
             handleNotchingFilter(dynamic_cast<esnd::NotchingFilter*>(filter));
             break;
+
+        case esnd::FilterType::LowshelfSecondOrder:
+            handleLowshelfFilter(dynamic_cast<esnd::LowshelfFilter*>(filter));
+            break;
+
+        case esnd::FilterType::HighshelfSecondOrder:
+            handleHighshelfFilter(dynamic_cast<esnd::HighshelfFilter*>(filter));
+            break;
     }
 
+}
+
+void esnddemo::ProgramManager::handleBiquadFilter(esnd::BiquadFilter *filter)
+{
+    double min = 0.01;
+    double max = 1000.0;
+    double a[3] {filter->config.a0, filter->config.a1, filter->config.a2};
+    double b[3] {filter->config.b0, filter->config.b1, filter->config.b2};
+    ImGui::SameLine();
+    ImGui::PushItemWidth(200);
+    if(ImGui::SliderScalarN(fmt::format("a###abiq{0}", filter->getId()).c_str(), ImGuiDataType_Double, &a, 3, &min, &max))
+    {
+        filter->config.a0 = a[0];
+        filter->config.a1 = a[1];
+        filter->config.a2 = a[2];
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(200);
+    if(ImGui::SliderScalarN(fmt::format("b###bbiq{0}", filter->getId()).c_str(), ImGuiDataType_Double, &b, 3, &min, &max))
+    {
+        filter->config.b0 = b[0];
+        filter->config.b1 = b[1];
+        filter->config.b2 = b[2];
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###activebiq{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
 }
 
 void esnddemo::ProgramManager::handleLowpassFilter1(esnd::LowpassFilter1 *filter)
@@ -268,41 +313,6 @@ void esnddemo::ProgramManager::handleLowpassFilter2(esnd::LowpassFilter2 *filter
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
     if(ImGui::Checkbox(fmt::format("active###activelpf2{0}", filter->getId()).c_str(), &filter->isActive))
-    {
-
-    }
-    ImGui::PopItemWidth();
-}
-
-void esnddemo::ProgramManager::handleBiquadFilter(esnd::BiquadFilter *filter)
-{
-    double min = 0.01;
-    double max = 1000.0;
-    double a[3] {filter->config.a0, filter->config.a1, filter->config.a2};
-    double b[3] {filter->config.b0, filter->config.b1, filter->config.b2};
-    ImGui::SameLine();
-    ImGui::PushItemWidth(200);
-    if(ImGui::SliderScalarN(fmt::format("a###abiq{0}", filter->getId()).c_str(), ImGuiDataType_Double, &a, 3, &min, &max))
-    {
-        filter->config.a0 = a[0];
-        filter->config.a1 = a[1];
-        filter->config.a2 = a[2];
-        filter->refresh();
-    }
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
-    ImGui::PushItemWidth(200);
-    if(ImGui::SliderScalarN(fmt::format("b###bbiq{0}", filter->getId()).c_str(), ImGuiDataType_Double, &b, 3, &min, &max))
-    {
-        filter->config.b0 = b[0];
-        filter->config.b1 = b[1];
-        filter->config.b2 = b[2];
-        filter->refresh();
-    }
-    ImGui::PopItemWidth();
-    ImGui::SameLine();
-    ImGui::PushItemWidth(100);
-    if(ImGui::Checkbox(fmt::format("active###activebiq{0}", filter->getId()).c_str(), &filter->isActive))
     {
 
     }
@@ -443,6 +453,80 @@ void esnddemo::ProgramManager::handleNotchingFilter(esnd::NotchingFilter *filter
     ImGui::SameLine();
     ImGui::PushItemWidth(100);
     if(ImGui::Checkbox(fmt::format("active###activenotching{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleLowshelfFilter(esnd::LowshelfFilter *filter)
+{
+    double minGain = 0.1, min_shelfSlope = 0.1, min_frequency = 100;
+    double maxGain = 10.0, max_shelfSlope = 6.5, max_frequency = 5000.0;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("gain###gainlowshelf{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.gainDB, 1, &minGain, &maxGain))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("shelfSlope###shelfSlopelowshelf{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.shelfSlope, 1, &min_shelfSlope, &max_shelfSlope))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("frequency###frequencylowshelf{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.frequency, 1, &min_frequency, &max_frequency))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###activelowshelf{0}", filter->getId()).c_str(), &filter->isActive))
+    {
+
+    }
+    ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::handleHighshelfFilter(esnd::HighshelfFilter *filter)
+{
+    double minGain = 0.1, min_shelfSlope = 0.1, min_frequency = 100;
+    double maxGain = 10.0, max_shelfSlope = 6.5, max_frequency = 5000.0;
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("gain###gainhighshelf{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.gainDB, 1, &minGain, &maxGain))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("shelfSlope###shelfSlopehighshelf{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.shelfSlope, 1, &min_shelfSlope, &max_shelfSlope))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::SliderScalarN(fmt::format("frequency###frequencyhighshelf{0}", filter->getId()).c_str(), ImGuiDataType_Double,
+                            &filter->config.frequency, 1, &min_frequency, &max_frequency))
+    {
+        filter->refresh();
+    }
+    ImGui::PopItemWidth();
+    ImGui::SameLine();
+    ImGui::PushItemWidth(100);
+    if(ImGui::Checkbox(fmt::format("active###activehighshelf{0}", filter->getId()).c_str(), &filter->isActive))
     {
 
     }
