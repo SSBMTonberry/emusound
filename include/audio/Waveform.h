@@ -22,18 +22,25 @@ namespace esnd
     {
         public:
             Waveform() = default;
+            Waveform(const std::string &id, double amplitude, double frequency, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            Waveform(double amplitude, double frequency, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
             ~Waveform();
 
-            StreamLoadStatus initialize(uint32_t channels, uint32_t sampleRate, double amplitude, double frequency, WaveformType type);
+            StreamLoadStatus initialize(double amplitude, double frequency, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
 
             void play();
             void stop();
+            void refresh();
             //void seek(int offset);
 
+            const std::string &getId() const;
             [[nodiscard]] SoundStatus getStatus() const;
-
             [[nodiscard]] uint32_t getChannelCount() const;
             [[nodiscard]] uint32_t getSampleRate() const;
+            WaveformConfig *getConfig() { return &m_config; }
+
+
+            void setId(const std::string &id);
 
             friend void wavecb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
             //friend size_t wavecb::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
@@ -60,6 +67,7 @@ namespace esnd
             bool m_isShuttingDown = false; //Set to true when calling destructor
 
             SoundStatus m_status;
+            std::string m_id;
 
             WaveformConfig m_config;
             ma_result m_decoderInitStatus;

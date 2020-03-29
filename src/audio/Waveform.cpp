@@ -4,12 +4,6 @@
 
 #include "audio/Waveform.h"
 
-esnd::Waveform::~Waveform()
-{
-    m_isShuttingDown = true;
-    ma_device_uninit(&m_config.device);
-}
-
 void esnd::wavecb::onDataCallback(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount)
 {
     esnd::Waveform* waveform = (esnd::Waveform*)pDevice->pUserData;
@@ -20,7 +14,25 @@ void esnd::wavecb::onDataCallback(ma_device *pDevice, void *pOutput, const void 
     (void)pInput; /* Unused. */
 }
 
-esnd::StreamLoadStatus esnd::Waveform::initialize(uint32_t channels, uint32_t sampleRate, double amplitude, double frequency, esnd::WaveformType type)
+esnd::Waveform::Waveform(const std::string &id, double amplitude, double frequency,
+        esnd::WaveformType type, uint32_t channels, uint32_t sampleRate) : m_id {id}
+{
+    initialize(amplitude, frequency, type, channels, sampleRate);
+}
+
+esnd::Waveform::Waveform(double amplitude, double frequency, esnd::WaveformType type, uint32_t channels, uint32_t sampleRate)
+{
+    initialize(amplitude, frequency, type, channels, sampleRate);
+}
+
+esnd::Waveform::~Waveform()
+{
+    m_isShuttingDown = true;
+    ma_device_uninit(&m_config.device);
+}
+
+
+esnd::StreamLoadStatus esnd::Waveform::initialize(double amplitude, double frequency, WaveformType type, uint32_t channels, uint32_t sampleRate)
 {
     esnd::StreamLoadStatus status = esnd::StreamLoadStatus::OK;
     if(m_config.initialize(channels, sampleRate, amplitude, frequency, type) != 0)
@@ -58,6 +70,11 @@ void esnd::Waveform::stop()
     m_status = esnd::SoundStatus::Stopped;
 }
 
+void esnd::Waveform::refresh()
+{
+    m_config.refresh();
+}
+
 esnd::SoundStatus esnd::Waveform::getStatus() const
 {
     return m_status;
@@ -71,4 +88,14 @@ uint32_t esnd::Waveform::getChannelCount() const
 uint32_t esnd::Waveform::getSampleRate() const
 {
     return m_sampleRate;
+}
+
+const std::string &esnd::Waveform::getId() const
+{
+    return m_id;
+}
+
+void esnd::Waveform::setId(const std::string &id)
+{
+    m_id = id;
 }

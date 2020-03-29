@@ -25,6 +25,11 @@ namespace esnd
                 return ma_waveform_init(&config, &waveform);
             }
 
+            int refresh()
+            {
+                return ma_waveform_init(&config, &waveform);
+            }
+
             ma_waveform waveform;
             ma_waveform_config config;
             ma_device_config deviceConfig;

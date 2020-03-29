@@ -48,6 +48,11 @@ void esnddemo::ProgramManager::initializeEmuStream()
         stream->addFilter<esnd::LowshelfFilter>(  "Lowshelf:   ", 5, 1, 1000)->isActive = false;
         stream->addFilter<esnd::HighshelfFilter>( "Highshelf:  ", 5, 1, 1000)->isActive = false;
     }
+
+    m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Square:   ",0.2, 1000, esnd::WaveformType::Square));
+    m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Sine:     ",0.2, 1000, esnd::WaveformType::Sine));
+    m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Triangle: ",0.2, 1000, esnd::WaveformType::Triangle));
+    m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Sawtooth: ",0.2, 1000, esnd::WaveformType::Sawtooth));
 }
 
 void esnddemo::ProgramManager::initializeAudioManager()
@@ -145,6 +150,7 @@ void esnddemo::ProgramManager::drawForms()
     drawEmuStreamForm();
     drawAudioManagerForm();
     drawFilterForm();
+    drawWaveformForm();
 }
 
 void esnddemo::ProgramManager::drawEmuStreamForm()
@@ -174,6 +180,36 @@ void esnddemo::ProgramManager::drawEmuStreamForm()
 void esnddemo::ProgramManager::drawAudioManagerForm()
 {
 
+}
+
+void esnddemo::ProgramManager::drawWaveformForm()
+{
+    ImGui::Begin("Waveforms");
+    for(auto &waveform : m_waveforms)
+    {
+        double min_amp = 0.2, min_freq = 10;
+        double max_amp = 100.0, max_freq = 5000;
+        ImGui::Text(waveform->getId().c_str());
+        ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Play###Playwave{0}", waveform->getId()).c_str())) waveform->play(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Stop###Stopwave{0}", waveform->getId()).c_str())) waveform->stop(); ImGui::SameLine();
+        ImGui::PushItemWidth(100);
+        if(ImGui::SliderScalarN(fmt::format("amplitude###amplitudewave{0}", waveform->getId()).c_str(), ImGuiDataType_Double,
+                &waveform->getConfig()->config.amplitude, 1, &min_amp, &max_amp))
+        {
+            waveform->refresh();
+        }
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+        ImGui::PushItemWidth(100);
+        if(ImGui::SliderScalarN(fmt::format("frequency###frequencywave{0}", waveform->getId()).c_str(), ImGuiDataType_Double,
+                &waveform->getConfig()->config.frequency, 1, &min_freq, &max_freq))
+        {
+            waveform->refresh();
+        }
+        ImGui::PopItemWidth();
+    }
+    ImGui::End();
 }
 
 void esnddemo::ProgramManager::drawFilterForm()
