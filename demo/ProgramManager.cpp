@@ -202,9 +202,71 @@ void esnddemo::ProgramManager::drawWaveformPianoForm()
     if(m_pianoWaveform != nullptr)
     {
 
-        drawWaveformPianoPart("A1", esnd::Waveform::A1);
-        drawWaveformPianoPart("A1# ", esnd::Waveform::A1_SHARP);
-        drawWaveformPianoPart("B1", esnd::Waveform::B1);
+        drawWaveformPianoPart("A0",   esnd::Notes::A0);
+        drawWaveformPianoPart("A0# ", esnd::Notes::A0_SHARP);
+        drawWaveformPianoPart("B0",   esnd::Notes::B0);
+        drawWaveformPianoPart("C0",   esnd::Notes::C0);
+        drawWaveformPianoPart("C0# ", esnd::Notes::C0_SHARP);
+        drawWaveformPianoPart("D0",   esnd::Notes::D0);
+        drawWaveformPianoPart("D0# ", esnd::Notes::D0_SHARP);
+        drawWaveformPianoPart("E0",   esnd::Notes::E0);
+        drawWaveformPianoPart("F0",   esnd::Notes::F0);
+        drawWaveformPianoPart("F0# ", esnd::Notes::F0_SHARP);
+        drawWaveformPianoPart("G0",   esnd::Notes::G0);
+        drawWaveformPianoPart("G0# ", esnd::Notes::G0_SHARP);
+        ImGui::NewLine();
+        drawWaveformPianoPart("A1",   esnd::Notes::A1);
+        drawWaveformPianoPart("A1# ", esnd::Notes::A1_SHARP);
+        drawWaveformPianoPart("B1",   esnd::Notes::B1);
+        drawWaveformPianoPart("C1",   esnd::Notes::C1);
+        drawWaveformPianoPart("C1# ", esnd::Notes::C1_SHARP);
+        drawWaveformPianoPart("D1",   esnd::Notes::D1);
+        drawWaveformPianoPart("D1# ", esnd::Notes::D1_SHARP);
+        drawWaveformPianoPart("E1",   esnd::Notes::E1);
+        drawWaveformPianoPart("F1",   esnd::Notes::F1);
+        drawWaveformPianoPart("F1# ", esnd::Notes::F1_SHARP);
+        drawWaveformPianoPart("G1",   esnd::Notes::G1);
+        drawWaveformPianoPart("G1# ", esnd::Notes::G1_SHARP);
+        ImGui::NewLine();
+        drawWaveformPianoPart("A2",   esnd::Notes::A2);
+        drawWaveformPianoPart("A2# ", esnd::Notes::A2_SHARP);
+        drawWaveformPianoPart("B2",   esnd::Notes::B2);
+        drawWaveformPianoPart("C2",   esnd::Notes::C2);
+        drawWaveformPianoPart("C2# ", esnd::Notes::C2_SHARP);
+        drawWaveformPianoPart("D2",   esnd::Notes::D2);
+        drawWaveformPianoPart("D2# ", esnd::Notes::D2_SHARP);
+        drawWaveformPianoPart("E2",   esnd::Notes::E2);
+        drawWaveformPianoPart("F2",   esnd::Notes::F2);
+        drawWaveformPianoPart("F2# ", esnd::Notes::F2_SHARP);
+        drawWaveformPianoPart("G2",   esnd::Notes::G2);
+        drawWaveformPianoPart("G2# ", esnd::Notes::G2_SHARP);
+        ImGui::NewLine();
+        drawWaveformPianoPart("A3",   esnd::Notes::A3);
+        drawWaveformPianoPart("A3# ", esnd::Notes::A3_SHARP);
+        drawWaveformPianoPart("B3",   esnd::Notes::B3);
+        drawWaveformPianoPart("C3",   esnd::Notes::C3);
+        drawWaveformPianoPart("C3# ", esnd::Notes::C3_SHARP);
+        drawWaveformPianoPart("D3",   esnd::Notes::D3);
+        drawWaveformPianoPart("D3# ", esnd::Notes::D3_SHARP);
+        drawWaveformPianoPart("E3",   esnd::Notes::E3);
+        drawWaveformPianoPart("F3",   esnd::Notes::F3);
+        drawWaveformPianoPart("F3# ", esnd::Notes::F3_SHARP);
+        drawWaveformPianoPart("G3",   esnd::Notes::G3);
+        drawWaveformPianoPart("G3# ", esnd::Notes::G3_SHARP);
+        ImGui::NewLine();
+        drawWaveformPianoPart("A4",   esnd::Notes::A4);
+        drawWaveformPianoPart("A4# ", esnd::Notes::A4_SHARP);
+        drawWaveformPianoPart("B4",   esnd::Notes::B4);
+        drawWaveformPianoPart("C4",   esnd::Notes::C4);
+        drawWaveformPianoPart("C4# ", esnd::Notes::C4_SHARP);
+        drawWaveformPianoPart("D4",   esnd::Notes::D4);
+        drawWaveformPianoPart("D4# ", esnd::Notes::D4_SHARP);
+        drawWaveformPianoPart("E4",   esnd::Notes::E4);
+        drawWaveformPianoPart("F4",   esnd::Notes::F4);
+        drawWaveformPianoPart("F4# ", esnd::Notes::F4_SHARP);
+        drawWaveformPianoPart("G4",   esnd::Notes::G4);
+        drawWaveformPianoPart("G4# ", esnd::Notes::G4_SHARP);
+
         //if(ImGui::SmallButton(fmt::format("A1# ###A1S{0}", m_pianoWaveform->getId()).c_str())) {conf->frequency = esnd::Waveform::A1_SHARP; m_pianoWaveform->refresh(); m_playPiano = true; }
         //if(ImGui::SmallButton(fmt::format("B1###B1{0}", m_pianoWaveform->getId()).c_str())) {conf->frequency = esnd::Waveform::B1; m_pianoWaveform->refresh(); m_playPiano = true; }
         //if(m_playPiano)
@@ -224,6 +286,7 @@ void esnddemo::ProgramManager::drawWaveformPianoPart(const std::string &id, doub
         m_pianoWaveform->refresh();
         m_playPiano = true;
     }
+    ImGui::SameLine();
 }
 
 void esnddemo::ProgramManager::drawWaveformForm()

@@ -10,5 +10,6 @@
 //#include "external/emusound_external.h"
 #include "audio/EmuStream.h"
 #include "audio/Waveform.h"
+#include "audio/Notes.hpp"
 
 #endif //EMUSOUND_EMUSOUND_H
