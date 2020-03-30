@@ -21,6 +21,10 @@ namespace esnd
     class Waveform
     {
         public:
+            static constexpr double A1 = 27.5;
+            static constexpr double A1_SHARP = 29.135;
+            static constexpr double B1 = 30.863;
+
             Waveform() = default;
             Waveform(const std::string &id, double amplitude, double frequency, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
             Waveform(double amplitude, double frequency, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);

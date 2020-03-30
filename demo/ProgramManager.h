@@ -37,6 +37,8 @@ namespace esnddemo
             void drawEmuStreamForm();
             void drawFilterForm();
             void drawWaveformForm();
+            void drawWaveformPianoForm();
+            void drawWaveformPianoPart(const std::string &id, double frequency);
             void drawAudioManagerForm();
 
             void manageFilter(esnd::ISoundFilter *filter);
@@ -57,6 +59,8 @@ namespace esnddemo
             std::vector<std::unique_ptr<esnd::Waveform>> m_waveforms;
 
             esnd::EmuStream *m_streamForFilter = nullptr;
+            esnd::Waveform *m_pianoWaveform = nullptr;
+            bool m_playPiano = false;
 
             //ImGui
             int m_seek = 0;
@@ -64,6 +68,8 @@ namespace esnddemo
             ImGuiIO *m_io = nullptr;
             sf::Clock m_deltaClock;
             std::vector<sf::Event> m_events;
+
+
     };
 }
 

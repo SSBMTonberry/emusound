@@ -151,6 +151,7 @@ void esnddemo::ProgramManager::drawForms()
     drawAudioManagerForm();
     drawFilterForm();
     drawWaveformForm();
+    drawWaveformPianoForm();
 }
 
 void esnddemo::ProgramManager::drawEmuStreamForm()
@@ -190,6 +191,41 @@ void esnddemo::ProgramManager::drawAudioManagerForm()
 
 }
 
+void esnddemo::ProgramManager::drawWaveformPianoForm()
+{
+    ImGui::Begin("Waveform piano");
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    {
+        m_playPiano = false;
+    }
+
+    if(m_pianoWaveform != nullptr)
+    {
+
+        drawWaveformPianoPart("A1", esnd::Waveform::A1);
+        drawWaveformPianoPart("A1# ", esnd::Waveform::A1_SHARP);
+        drawWaveformPianoPart("B1", esnd::Waveform::B1);
+        //if(ImGui::SmallButton(fmt::format("A1# ###A1S{0}", m_pianoWaveform->getId()).c_str())) {conf->frequency = esnd::Waveform::A1_SHARP; m_pianoWaveform->refresh(); m_playPiano = true; }
+        //if(ImGui::SmallButton(fmt::format("B1###B1{0}", m_pianoWaveform->getId()).c_str())) {conf->frequency = esnd::Waveform::B1; m_pianoWaveform->refresh(); m_playPiano = true; }
+        //if(m_playPiano)
+        //    m_pianoWaveform->play();
+        //else
+        //    m_pianoWaveform->stop();
+    }
+    ImGui::End();
+}
+
+void esnddemo::ProgramManager::drawWaveformPianoPart(const std::string &id, double frequency)
+{
+    ma_waveform_config *conf = &m_pianoWaveform->getConfig()->config;
+    if(ImGui::SmallButton(fmt::format("{1}###{1}{0}", m_pianoWaveform->getId(), id).c_str()))
+    {
+        conf->frequency = frequency;
+        m_pianoWaveform->refresh();
+        m_playPiano = true;
+    }
+}
+
 void esnddemo::ProgramManager::drawWaveformForm()
 {
     ImGui::Begin("Waveforms");
@@ -201,6 +237,7 @@ void esnddemo::ProgramManager::drawWaveformForm()
         ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("Play###Playwave{0}", waveform->getId()).c_str())) waveform->play(); ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("Stop###Stopwave{0}", waveform->getId()).c_str())) waveform->stop(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Send to piano###ToPiano{0}", waveform->getId()).c_str())) m_pianoWaveform = waveform.get(); ImGui::SameLine();
         ImGui::PushItemWidth(100);
         if(ImGui::SliderScalarN(fmt::format("amplitude###amplitudewave{0}", waveform->getId()).c_str(), ImGuiDataType_Double,
                 &waveform->getConfig()->config.amplitude, 1, &min_amp, &max_amp))
