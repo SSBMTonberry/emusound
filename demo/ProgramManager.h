@@ -59,6 +59,7 @@ namespace esnddemo
             esnd::EmuStream *m_streamForFilter = nullptr;
 
             //ImGui
+            int m_seek = 0;
             ImGuiStyle *m_style = nullptr;
             ImGuiIO *m_io = nullptr;
             sf::Clock m_deltaClock;

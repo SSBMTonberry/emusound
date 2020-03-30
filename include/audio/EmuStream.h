@@ -135,7 +135,7 @@ namespace esnd
             EmuConfig m_config;
             ma_result m_decoderInitStatus;
 
-            //std::mutex m_mutex; //Mutex for thread protection
+            std::mutex m_mutex; //Mutex for thread protection
     };
 }
 

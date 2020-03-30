@@ -164,9 +164,17 @@ void esnddemo::ProgramManager::drawEmuStreamForm()
         if(ImGui::SmallButton(fmt::format("Stop###Stop{0}", emuStream->getId()).c_str())) emuStream->stop(); ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("<-###<-{0}", emuStream->getId()).c_str())) emuStream->previousTrack(); ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("->###->{0}", emuStream->getId()).c_str())) emuStream->nextTrack(); ImGui::SameLine();
-        if(ImGui::SmallButton(fmt::format("Filter###Filter{0}", emuStream->getId()).c_str())) m_streamForFilter = emuStream;
-    }
+        if(ImGui::SmallButton(fmt::format("Filter###Filter{0}", emuStream->getId()).c_str())) m_streamForFilter = emuStream; ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Seek###Seek{0}", emuStream->getId()).c_str())) emuStream->seek(m_seek);
 
+    }
+    ImGui::PushItemWidth(100);
+    if(ImGui::InputInt("Seek value(ms)", &m_seek, 1000, 500))
+    {
+        if(m_seek < 0) m_seek = 0;
+    }
+    ImGui::PopItemWidth();
+    ImGui::NewLine();
     if(ImGui::Button("STOP!", {100, 40}))
     {
         for(auto &stream : m_streams)
@@ -201,7 +209,7 @@ void esnddemo::ProgramManager::drawWaveformForm()
         }
         ImGui::PopItemWidth();
         ImGui::SameLine();
-        ImGui::PushItemWidth(100);
+        ImGui::PushItemWidth(250);
         if(ImGui::SliderScalarN(fmt::format("frequency###frequencywave{0}", waveform->getId()).c_str(), ImGuiDataType_Double,
                 &waveform->getConfig()->config.frequency, 1, &min_freq, &max_freq))
         {
@@ -214,7 +222,9 @@ void esnddemo::ProgramManager::drawWaveformForm()
 
 void esnddemo::ProgramManager::drawFilterForm()
 {
-    ImGui::Begin("Filters");
+    std::string filterid = (m_streamForFilter == nullptr) ? "" : m_streamForFilter->getId();
+    std::string imguiId = (m_streamForFilter == nullptr) ? "Filters###Filters" : fmt::format("Filters ({0})###Filters", filterid);
+    ImGui::Begin(imguiId.c_str());
     if(m_streamForFilter != nullptr)
     {
         for(auto &filter : *m_streamForFilter->getFilters())

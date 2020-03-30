@@ -433,7 +433,7 @@ esnd::SoundStatus esnd::EmuStream::getStatus() const
 
 size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead)
 {
-    //std::lock_guard<std::mutex> guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     size_t bufferSize = bytesToRead / 2;
     m_emu->play(bufferSize, (short*) pBufferOut);
 
@@ -446,7 +446,7 @@ size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t by
 
 ma_bool32 esnd::EmuStream::onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin)
 {
-    //std::lock_guard<std::mutex> guard(m_mutex);
+    std::lock_guard<std::mutex> guard(m_mutex);
     int toSeek = byteOffset / 4;
     blargg_err_t error = m_emu->seek(toSeek);
 
@@ -455,7 +455,7 @@ ma_bool32 esnd::EmuStream::onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_
 
 void esnd::EmuStream::onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount)
 {
-    //std::lock_guard<std::mutex> guard(m_mutex);
+    //std::lock_guard<std::mutex> guard(m_mutex); //Somehow this causes a deadlock. Do not use
 
     size_t bufferRead = ma_decoder_read_pcm_frames(&m_config.decoder, pOutput, frameCount);
 }
