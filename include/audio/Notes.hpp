@@ -76,6 +76,37 @@ namespace esnd
             static constexpr double F4_SHARP =  739.990;
             static constexpr double G4 =        783.990;
             static constexpr double G4_SHARP =  830.610;
+
+            static constexpr double A5 =        880.000;
+            static constexpr double A5_SHARP =  932.330;
+            static constexpr double B5 =        987.770;
+            static constexpr double C5 =       1046.500;
+            static constexpr double C5_SHARP = 1108.700;
+            static constexpr double D5 =       1174.700;
+            static constexpr double D5_SHARP = 1244.500;
+            static constexpr double E5 =       1318.500;
+            static constexpr double F5 =       1396.900;
+            static constexpr double F5_SHARP = 1480.000;
+            static constexpr double G5 =       1568.200;
+            static constexpr double G5_SHARP = 1661.200;
+
+            static constexpr double A6 =       1760.000;
+            static constexpr double A6_SHARP = 1864.700;
+            static constexpr double B6 =       1975.500;
+            static constexpr double C6 =       2093.000;
+            static constexpr double C6_SHARP = 2217.500;
+            static constexpr double D6 =       2349.300;
+            static constexpr double D6_SHARP = 2489.000;
+            static constexpr double E6 =       2637.000;
+            static constexpr double F6 =       2793.000;
+            static constexpr double F6_SHARP = 2960.000;
+            static constexpr double G6 =       3136.000;
+            static constexpr double G6_SHARP = 3322.400;
+
+            static constexpr double A7 =       3520.000;
+            static constexpr double A7_SHARP = 3729.300;
+            static constexpr double B7 =       3951.100;
+            static constexpr double C7 =       4186.000;
     };
 
 }
