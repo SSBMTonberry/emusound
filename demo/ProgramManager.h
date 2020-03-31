@@ -69,6 +69,7 @@ namespace esnddemo
             sf::Clock m_deltaClock;
             std::vector<sf::Event> m_events;
 
+            esnd::Notes m_notes;
 
     };
 }
