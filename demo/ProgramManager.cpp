@@ -199,6 +199,8 @@ void esnddemo::ProgramManager::drawWaveformPianoForm()
         m_playPiano = false;
     }
 
+    auto notes = esnd::Notes::getAllNotes();
+
     if(m_pianoWaveform != nullptr)
     {
 

@@ -4,6 +4,9 @@
 
 #ifndef EMUSOUND_NOTES_HPP
 #define EMUSOUND_NOTES_HPP
+
+#include <sstream>
+#include "Enums.hpp"
 namespace esnd
 {
     class Notes
@@ -107,6 +110,35 @@ namespace esnd
             static constexpr double A7_SHARP = 3729.300;
             static constexpr double B7 =       3951.100;
             static constexpr double C7 =       4186.000;
+
+            static std::map<double, std::string> getAllNotes()
+            {
+                std::map<double, std::string> map;
+
+                std::string notes[12] = { "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"};
+
+                double ratio = pow(2.0, 1.0/12.0);
+                //cout << fixed;
+                //cout << setprecision(12);
+                //cout << "ratio: " << ratio << endl << endl;
+
+                double a = 27.500;
+                int octaves = 8;
+                int totalNotes = 12 * octaves;
+                //cout << setprecision(4);
+                for (int i=0; i < totalNotes; i++)
+                {
+                    std::stringstream notename;
+                    double value = a * pow(ratio, i);
+                    int octave = i/12;
+                    notename << notes[i%12] << octave;
+
+                    map[value] = notename.str();
+                    //cout << left << setw(3) << notes[i] << right << a * pow(ratio, i) << endl;
+                }
+
+                return map;
+            }
     };
 
 }
