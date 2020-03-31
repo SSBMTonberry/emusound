@@ -10,3 +10,17 @@ cmake-build-release/
 EmusoundConfig.h
 
 cmake-build-minsizerel/
+
+build/demo/CMakeFiles/
+
+build/
+
+.vscode/
+
+GPATH
+
+GRTAGS
+
+GTAGS
+
+imgui.ini
