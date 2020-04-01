@@ -10,8 +10,10 @@
 void esnd::emucb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount)
 {
 
-    //ma_decoder* pDecoder = (ma_decoder*)pDevice->pUserData;
-    //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
+    //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
+
+    //ma_decoder *decoder = (ma_decoder*) pDevice->pUserData;
+    //ma_decoder_read_pcm_frames(decoder, pOutput, frameCount);
 
     esnd::EmuStream *stream = (esnd::EmuStream*)pDevice->pUserData;
     if(stream == nullptr)
@@ -25,11 +27,9 @@ void esnd::emucb::onDataCallback(ma_device* pDevice, void* pOutput, const void* 
 
 size_t esnd::emucb::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
 {
-    //std::lock_guard<std::mutex> guard(mutex); //Thread safety (hopefully)
     esnd::EmuStream *stream = (esnd::EmuStream*)pDecoder->pUserData;
     if(stream == nullptr)
         return 0;
-
 
     if(stream->getStatus() == esnd::SoundStatus::Playing)
         return stream->onRead(pDecoder, pBufferOut, bytesToRead);
@@ -85,6 +85,11 @@ esnd::EmuStream::~EmuStream()
     }
 }
 
+//void onStop(ma_device* pDevice)
+//{
+//    int yes = 0;
+//}
+
 esnd::StreamLoadStatus esnd::EmuStream::initialize()
 {
     //std::bind(&esnd::EmuStream::onRead, this, std::placeholders::_1, std::placeholders::_2,
@@ -112,7 +117,8 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
     m_config.deviceConfig.playback.channels = m_config.decoder.outputChannels;
     m_config.deviceConfig.sampleRate        = m_config.decoder.outputSampleRate;
     m_config.deviceConfig.dataCallback      = esnd::emucb::onDataCallback;
-    m_config.deviceConfig.pUserData         = this;//&m_config.decoder;
+    m_config.deviceConfig.pUserData         = this; //&m_config.decoder; //this;
+    //m_config.deviceConfig.stopCallback      = onStop;
 
     if (ma_device_init(NULL, &m_config.deviceConfig, &m_config.device) != MA_SUCCESS) {
         printf("Failed to open playback device.\n");

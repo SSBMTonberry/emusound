@@ -50,7 +50,7 @@ namespace esnd
 
             //size_t onRead(ma_decoder *pDecoder, void *pBufferOut, size_t bytesToRead);
             //ma_bool32 onSeek(ma_decoder *pDecoder, int byteOffset, ma_seek_origin origin);
-            //void onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
+            void onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount);
 
             /*!
              * Samples to store in case they are to be exported to a file.
@@ -70,6 +70,7 @@ namespace esnd
             std::string m_id;
 
             WaveformConfig m_config;
+
             ma_result m_decoderInitStatus;
 
             //std::mutex m_mutex; //Mutex for thread protection
