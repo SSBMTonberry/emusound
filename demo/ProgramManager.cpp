@@ -166,8 +166,12 @@ void esnddemo::ProgramManager::drawEmuStreamForm()
         if(ImGui::SmallButton(fmt::format("<-###<-{0}", emuStream->getId()).c_str())) emuStream->previousTrack(); ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("->###->{0}", emuStream->getId()).c_str())) emuStream->nextTrack(); ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("Filter###Filter{0}", emuStream->getId()).c_str())) m_streamForFilter = emuStream; ImGui::SameLine();
-        if(ImGui::SmallButton(fmt::format("Seek###Seek{0}", emuStream->getId()).c_str())) emuStream->seek(m_seek);
+        if(ImGui::SmallButton(fmt::format("Seek###Seek{0}", emuStream->getId()).c_str())) emuStream->seek(m_seek); ImGui::SameLine();
 
+        ImGui::PushItemWidth(100);
+        ImGui::DragFloat(fmt::format("Volume###Volume{0}", emuStream->getId()).c_str(),
+                emuStream->getVolumePtr(), 0.05f, 0.0f, 2.0f);
+        ImGui::PopItemWidth();
     }
     ImGui::PushItemWidth(100);
     if(ImGui::InputInt("Seek value(ms)", &m_seek, 1000, 500))
@@ -262,6 +266,12 @@ void esnddemo::ProgramManager::drawWaveformForm()
             waveform->refresh();
         }
         ImGui::PopItemWidth();
+    }
+
+    if(ImGui::Button("STOP!", {100, 40}))
+    {
+        for(auto &waveform : m_waveforms)
+            waveform->stop();
     }
     ImGui::End();
 }

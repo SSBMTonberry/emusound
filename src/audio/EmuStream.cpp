@@ -76,12 +76,16 @@ esnd::EmuStream::~EmuStream()
     //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
     if(m_emu != nullptr)
     {
-        m_isShuttingDown = true;
+        ma_mutex_uninit(&m_config.device.lock);
+        ma_device_uninit(&m_config.device);
+        ma_context_uninit(m_config.device.pContext);
+        ma_decoder_uninit(&m_config.decoder);
+
+        //ma_device_uninit(&m_config.device);
+        //ma_decoder_uninit(&m_config.decoder);
+
         delete m_emu;
         m_emu = nullptr;
-
-        ma_device_uninit(&m_config.device);
-        ma_decoder_uninit(&m_config.decoder);
     }
 }
 
@@ -439,7 +443,7 @@ size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t by
 
     int filterStatus = processFilters(pBufferOut, bufferSize, pBufferOut);
 
-    ma_apply_volume_factor_pcm_frames(pBufferOut, bufferSize / 2, ma_format_s16, 2, 1.0f);
+    ma_apply_volume_factor_pcm_frames(pBufferOut, bufferSize / 2, ma_format_s16, 2, m_volume);
 
     return bufferSize;
 }
@@ -483,4 +487,23 @@ Music_Emu *esnd::EmuStream::getEmu() const
 bool esnd::EmuStream::hasEmuError(gme_err_t emuError)
 {
     return emuError != nullptr;
+}
+
+float esnd::EmuStream::getVolume() const
+{
+    return m_volume;
+}
+
+/*!
+ *
+ * @param volume 1.0f = 100%
+ */
+void esnd::EmuStream::setVolume(float volume)
+{
+    m_volume = volume;
+}
+
+float* esnd::EmuStream::getVolumePtr()
+{
+    return &m_volume;
 }

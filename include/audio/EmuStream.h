@@ -40,6 +40,8 @@ namespace esnd
             void setTrack(int track);
             //void setId(const std::string &id);
             void setNumberOfPlays(int numberOfPlays);
+            void setVolume(float volume);
+
             void incrementNumberOfPlays();
 
             void nextTrack();
@@ -63,6 +65,12 @@ namespace esnd
             //const std::string &getId() const override;
             int getNumberOfPlays() const;
             const EmuConfig &getConfig() const;
+            [[nodiscard]] SoundStatus getStatus() const override;
+            [[nodiscard]] uint32_t getChannelCount() const override;
+            [[nodiscard]] uint32_t getSampleRate() const override;
+
+            float getVolume() const;
+            float* getVolumePtr();
 
             Music_Emu *getEmu() const;
 
@@ -79,11 +87,6 @@ namespace esnd
             void pause() override;
             void stop() override;
             void seek(int offset) override;
-
-            [[nodiscard]] SoundStatus getStatus() const override;
-
-            [[nodiscard]] uint32_t getChannelCount() const override;
-            [[nodiscard]] uint32_t getSampleRate() const override;
 
             friend void emucb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
             friend size_t emucb::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
@@ -120,7 +123,7 @@ namespace esnd
 
             int m_timePlayed = 0;
             bool m_isValid = true;
-            bool m_isShuttingDown = false; //Set to true when calling destructor
+            float m_volume = 1.0;
 
             int m_numberOfTracks = 0;
             std::vector<EmuVoice> m_voices;
