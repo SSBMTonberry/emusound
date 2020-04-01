@@ -9,7 +9,7 @@ void esnd::wavecb::onDataCallback(ma_device *pDevice, void *pOutput, const void 
     esnd::Waveform* waveform = (esnd::Waveform*)pDevice->pUserData;
 
     if(waveform && waveform->getStatus() == esnd::SoundStatus::Playing)
-        ma_waveform_read_pcm_frames(&waveform->m_config.waveform, pOutput, frameCount);
+        waveform->onGetData(pDevice, pOutput, pInput, frameCount);
 
     (void)pInput; /* Unused. */
 }
@@ -27,6 +27,7 @@ esnd::Waveform::Waveform(double amplitude, double frequency, esnd::WaveformType 
 
 esnd::Waveform::~Waveform()
 {
+    //std::lock_guard<std::mutex> guard(m_mutex);
     m_isShuttingDown = true;
     ma_device_uninit(&m_config.device);
 }
@@ -98,4 +99,10 @@ const std::string &esnd::Waveform::getId() const
 void esnd::Waveform::setId(const std::string &id)
 {
     m_id = id;
+}
+
+void esnd::Waveform::onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount)
+{
+    //std::lock_guard<std::mutex> guard(m_mutex);
+    ma_waveform_read_pcm_frames(&m_config.waveform, pOutput, frameCount);
 }
