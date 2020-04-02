@@ -25,10 +25,11 @@ namespace esnddemo
             void initializeAudioManager();
 
             bool run();
-
             void update(const sf::Time &time);
 
             void draw();
+
+            void shutdown();
 
         private:
             void initializeImGui();

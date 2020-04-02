@@ -116,9 +116,10 @@ bool esnddemo::ProgramManager::run()
 
         update(clock.getElapsedTime());
         draw();
-
-
     }
+
+    shutdown();
+
     return true;
 }
 
@@ -633,4 +634,13 @@ void esnddemo::ProgramManager::handleHighshelfFilter(esnd::HighshelfFilter *filt
 
     }
     ImGui::PopItemWidth();
+}
+
+void esnddemo::ProgramManager::shutdown()
+{
+    for(auto &stream : m_streams)
+        stream->onShutdown();
+
+    for(auto &waveform : m_waveforms)
+        waveform->onShutdown();
 }

@@ -92,6 +92,8 @@ namespace esnd
             friend size_t emucb::onReadCallback(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead);
             friend ma_bool32 emucb::onSeekCallback(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin);
 
+            void onShutdown() override;
+
         protected:
             StreamLoadStatus initialize();
             StreamLoadStatus initializeEmu();

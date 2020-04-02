@@ -85,6 +85,8 @@ namespace esnd
                 return status;
             }
 
+            virtual void onShutdown() = 0;
+
         protected:
             virtual size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead) = 0;
             virtual ma_bool32 onSeek(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin) = 0;

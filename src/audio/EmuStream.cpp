@@ -73,20 +73,7 @@ esnd::EmuStream::EmuStream(void *data, size_t size, int track, uint32_t channels
 
 esnd::EmuStream::~EmuStream()
 {
-    //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
-    if(m_emu != nullptr)
-    {
-        ma_mutex_uninit(&m_config.device.lock);
-        ma_device_uninit(&m_config.device);
-        ma_context_uninit(m_config.device.pContext);
-        ma_decoder_uninit(&m_config.decoder);
 
-        //ma_device_uninit(&m_config.device);
-        //ma_decoder_uninit(&m_config.decoder);
-
-        delete m_emu;
-        m_emu = nullptr;
-    }
 }
 
 //void onStop(ma_device* pDevice)
@@ -512,4 +499,22 @@ void esnd::EmuStream::setVolume(float volume)
 float* esnd::EmuStream::getVolumePtr()
 {
     return &m_volume;
+}
+
+void esnd::EmuStream::onShutdown()
+{
+    //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
+    if(m_emu != nullptr)
+    {
+        ma_mutex_uninit(&m_config.device.lock);
+        ma_device_uninit(&m_config.device);
+        ma_context_uninit(m_config.device.pContext);
+        ma_decoder_uninit(&m_config.decoder);
+
+        //ma_device_uninit(&m_config.device);
+        //ma_decoder_uninit(&m_config.decoder);
+
+        delete m_emu;
+        m_emu = nullptr;
+    }
 }

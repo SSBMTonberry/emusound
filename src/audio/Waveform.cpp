@@ -25,14 +25,6 @@ esnd::Waveform::Waveform(double amplitude, double frequency, esnd::WaveformType 
     initialize(amplitude, frequency, type, channels, sampleRate);
 }
 
-esnd::Waveform::~Waveform()
-{
-    //std::lock_guard<std::mutex> guard(m_mutex);
-    m_isShuttingDown = true;
-    ma_device_uninit(&m_config.device);
-}
-
-
 esnd::StreamLoadStatus esnd::Waveform::initialize(double amplitude, double frequency, WaveformType type, uint32_t channels, uint32_t sampleRate)
 {
     esnd::StreamLoadStatus status = esnd::StreamLoadStatus::OK;
@@ -105,4 +97,10 @@ void esnd::Waveform::onGetData(ma_device *pDevice, void *pOutput, const void *pI
 {
     //std::lock_guard<std::mutex> guard(m_mutex);
     ma_waveform_read_pcm_frames(&m_config.waveform, pOutput, frameCount);
+
+}
+
+void esnd::Waveform::onShutdown()
+{
+    ma_device_uninit(&m_config.device);
 }
