@@ -61,7 +61,6 @@ namespace esnd
             uint32_t m_channels;
 
             bool m_isValid = true;
-            bool m_isShuttingDown = false; //Set to true when calling destructor
 
             SoundStatus m_status;
             std::string m_id;

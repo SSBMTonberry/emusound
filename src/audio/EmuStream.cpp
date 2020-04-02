@@ -504,16 +504,13 @@ float* esnd::EmuStream::getVolumePtr()
 void esnd::EmuStream::onShutdown()
 {
     //std::lock_guard<std::mutex> guard(m_mutex); //Thread safety (hopefully)
+    ma_mutex_uninit(&m_config.device.lock);
+    ma_device_uninit(&m_config.device);
+    ma_context_uninit(m_config.device.pContext);
+    ma_decoder_uninit(&m_config.decoder);
+
     if(m_emu != nullptr)
     {
-        ma_mutex_uninit(&m_config.device.lock);
-        ma_device_uninit(&m_config.device);
-        ma_context_uninit(m_config.device.pContext);
-        ma_decoder_uninit(&m_config.decoder);
-
-        //ma_device_uninit(&m_config.device);
-        //ma_decoder_uninit(&m_config.decoder);
-
         delete m_emu;
         m_emu = nullptr;
     }
