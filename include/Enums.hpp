@@ -77,6 +77,13 @@ namespace esnd
         Sawtooth = ma_waveform_type_sawtooth
     };
 
+    enum class NoiseType
+    {
+        White = ma_noise_type_white,
+        Pink = ma_noise_type_pink,
+        Brownian = ma_noise_type_brownian
+    };
+
     enum class Note : uint8_t
     {
             A0 =        0,

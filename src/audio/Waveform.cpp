@@ -97,10 +97,25 @@ void esnd::Waveform::onGetData(ma_device *pDevice, void *pOutput, const void *pI
 {
     //std::lock_guard<std::mutex> guard(m_mutex);
     ma_waveform_read_pcm_frames(&m_config.waveform, pOutput, frameCount);
-
+    ma_apply_volume_factor_pcm_frames(pOutput, frameCount, ma_format_f32, 2, m_volume);
 }
 
 void esnd::Waveform::onShutdown()
 {
     ma_device_uninit(&m_config.device);
+}
+
+float esnd::Waveform::getVolume() const
+{
+    return m_volume;
+}
+
+void esnd::Waveform::setVolume(float volume)
+{
+    m_volume = volume;
+}
+
+float *esnd::Waveform::getVolumePtr()
+{
+    return &m_volume;
 }

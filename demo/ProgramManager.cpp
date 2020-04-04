@@ -53,6 +53,10 @@ void esnddemo::ProgramManager::initializeEmuStream()
     m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Sine:     ",0.2, 1000, esnd::WaveformType::Sine));
     m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Triangle: ",0.2, 1000, esnd::WaveformType::Triangle));
     m_waveforms.emplace_back(std::make_unique<esnd::Waveform>("Sawtooth: ",0.2, 1000, esnd::WaveformType::Sawtooth));
+
+    m_noises.emplace_back(std::make_unique<esnd::Noise>("White:   ",1, 1.0, esnd::NoiseType::White));
+    m_noises.emplace_back(std::make_unique<esnd::Noise>("Pink:     ",1, 1.0, esnd::NoiseType::Pink));
+    m_noises.emplace_back(std::make_unique<esnd::Noise>("Brownian: ",1, 1.0, esnd::NoiseType::Brownian));
 }
 
 void esnddemo::ProgramManager::initializeAudioManager()
@@ -152,6 +156,7 @@ void esnddemo::ProgramManager::drawForms()
     drawAudioManagerForm();
     drawFilterForm();
     drawWaveformForm();
+    drawNoiseForm();
     drawWaveformPianoForm();
 }
 
@@ -171,7 +176,7 @@ void esnddemo::ProgramManager::drawEmuStreamForm()
 
         ImGui::PushItemWidth(100);
         ImGui::DragFloat(fmt::format("Volume###Volume{0}", emuStream->getId()).c_str(),
-                emuStream->getVolumePtr(), 0.05f, 0.0f, 2.0f);
+                emuStream->getVolumePtr(), 0.05f, 0.0f, 1.5f);
         ImGui::PopItemWidth();
     }
     ImGui::PushItemWidth(100);
@@ -267,12 +272,60 @@ void esnddemo::ProgramManager::drawWaveformForm()
             waveform->refresh();
         }
         ImGui::PopItemWidth();
+        ImGui::SameLine();
+        ImGui::PushItemWidth(100);
+        ImGui::DragFloat(fmt::format("Volume###Volume{0}", waveform->getId()).c_str(),
+                         waveform->getVolumePtr(), 0.05f, 0.0f, 1.5f);
+        ImGui::PopItemWidth();
     }
 
     if(ImGui::Button("STOP!", {100, 40}))
     {
         for(auto &waveform : m_waveforms)
             waveform->stop();
+    }
+    ImGui::End();
+}
+
+void esnddemo::ProgramManager::drawNoiseForm()
+{
+    ImGui::Begin("Noise");
+    for(auto &noise : m_noises)
+    {
+        int min_freq = 0, max_freq = 100;
+        double min_amp = 0.2;
+        double max_amp = 100.0;
+        ImGui::Text(noise->getId().c_str());
+        ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Play###Playnoise{0}", noise->getId()).c_str())) noise->play(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Stop###Stopnoise{0}", noise->getId()).c_str())) noise->stop(); ImGui::SameLine();
+        //if(ImGui::SmallButton(fmt::format("Send to piano###ToPiano{0}", noise->getId()).c_str())) m_pianoWaveform = noise.get(); ImGui::SameLine();
+        ImGui::PushItemWidth(250);
+        if(ImGui::SliderInt(fmt::format("seed###seednoise{0}", noise->getId()).c_str(),
+                                &noise->getConfig()->config.seed, min_freq, max_freq))
+        {
+            noise->refresh();
+        }
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+        ImGui::PushItemWidth(100);
+        if(ImGui::SliderScalarN(fmt::format("amplitude###amplitudenoise{0}", noise->getId()).c_str(), ImGuiDataType_Double,
+                                &noise->getConfig()->config.amplitude, 1, &min_amp, &max_amp))
+        {
+            noise->refresh();
+        }
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+        ImGui::PushItemWidth(100);
+        ImGui::DragFloat(fmt::format("Volume###Volume{0}", noise->getId()).c_str(),
+                         noise->getVolumePtr(), 0.05f, 0.0f, 1.5f);
+        ImGui::PopItemWidth();
+    }
+
+    if(ImGui::Button("STOP!", {100, 40}))
+    {
+        for(auto &noise : m_noises)
+            noise->stop();
     }
     ImGui::End();
 }

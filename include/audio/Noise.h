@@ -20,10 +20,10 @@ namespace esnd
     {
         public:
             Noise() = default;
-            Noise(const std::string &id, int32_t seed, double amplitude, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
-            Noise(int32_t seed, double amplitude, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            Noise(const std::string &id, int32_t seed, double amplitude, NoiseType type, uint32_t channels = 2); //, uint32_t sampleRate = 44100);
+            Noise(int32_t seed, double amplitude, NoiseType type, uint32_t channels = 2); //, uint32_t sampleRate = 44100);
 
-            StreamLoadStatus initialize(double amplitude, double frequency, WaveformType type, uint32_t channels = 2, uint32_t sampleRate = 44100);
+            StreamLoadStatus initialize(int32_t seed, double amplitude, NoiseType type, uint32_t channels = 2);
 
             void play();
             void stop();
@@ -31,12 +31,16 @@ namespace esnd
             //void seek(int offset);
 
             void setId(const std::string &id);
+            void setVolume(float volume);
 
-            const std::string &getId() const;
+            [[nodiscard]] const std::string &getId() const;
             [[nodiscard]] SoundStatus getStatus() const;
             [[nodiscard]] uint32_t getChannelCount() const;
             [[nodiscard]] uint32_t getSampleRate() const;
             NoiseConfig *getConfig() { return &m_config; }
+            float getVolume() const;
+            float* getVolumePtr();
+
 
             friend void noisecb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
             void onShutdown();
@@ -55,8 +59,8 @@ namespace esnd
             /*! Sample rate. 44100 is default and is the best quality. Anything below will take less space, but will
              *  also get worse quality on the sound. */
             uint32_t m_sampleRate;
-
             uint32_t m_channels;
+            float m_volume = 1.0;
 
             bool m_isValid = true;
 

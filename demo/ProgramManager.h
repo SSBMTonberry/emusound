@@ -38,6 +38,7 @@ namespace esnddemo
             void drawEmuStreamForm();
             void drawFilterForm();
             void drawWaveformForm();
+            void drawNoiseForm();
             void drawWaveformPianoForm();
             void drawWaveformPianoPart(const std::string &id, double frequency);
             void drawAudioManagerForm();
@@ -58,6 +59,7 @@ namespace esnddemo
 
             std::vector<std::unique_ptr<esnd::ISoundStream>> m_streams;
             std::vector<std::unique_ptr<esnd::Waveform>> m_waveforms;
+            std::vector<std::unique_ptr<esnd::Noise>> m_noises;
 
             esnd::EmuStream *m_streamForFilter = nullptr;
             esnd::Waveform *m_pianoWaveform = nullptr;

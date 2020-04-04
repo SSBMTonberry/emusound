@@ -13,23 +13,23 @@ namespace esnd
     {
         public:
             NoiseConfig() = default;
-            NoiseConfig(uint32_t channels, int32_t seed, double amplitude, WaveformType type)
+            NoiseConfig(uint32_t channels, int32_t seed, double amplitude, NoiseType type)
             {
                 initialize(channels, seed, amplitude, type);
             }
 
-            int initialize(uint32_t channels, int32_t seed, double amplitude, WaveformType type)
+            int initialize(uint32_t channels, int32_t seed, double amplitude, NoiseType type)
             {
                 config = ma_noise_config_init(ma_format_f32, channels, (ma_noise_type) type, seed, amplitude);
-                return ma_noise_init(&config, &waveform);
+                return ma_noise_init(&config, &noise);
             }
 
             int refresh()
             {
-                return ma_noise_init(&config, &waveform);
+                return ma_noise_init(&config, &noise);
             }
 
-            ma_noise waveform;
+            ma_noise noise;
             ma_noise_config config;
             ma_device_config deviceConfig;
             ma_device device;

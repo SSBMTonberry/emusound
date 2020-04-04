@@ -33,12 +33,15 @@ namespace esnd
             //void seek(int offset);
 
             void setId(const std::string &id);
+            void setVolume(float volume);
 
             const std::string &getId() const;
             [[nodiscard]] SoundStatus getStatus() const;
             [[nodiscard]] uint32_t getChannelCount() const;
             [[nodiscard]] uint32_t getSampleRate() const;
             WaveformConfig *getConfig() { return &m_config; }
+            float getVolume() const;
+            float* getVolumePtr();
 
             friend void wavecb::onDataCallback(ma_device* pDevice, void* pOutput, const void* pInput, ma_uint32 frameCount);
             void onShutdown();
@@ -57,13 +60,14 @@ namespace esnd
             /*! Sample rate. 44100 is default and is the best quality. Anything below will take less space, but will
              *  also get worse quality on the sound. */
             uint32_t m_sampleRate;
-
             uint32_t m_channels;
+            float m_volume = 1.0;
 
             bool m_isValid = true;
 
             SoundStatus m_status;
             std::string m_id;
+
 
             WaveformConfig m_config;
 
