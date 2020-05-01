@@ -300,7 +300,6 @@ int emusoundExample(int argc, char** argv)
     printf("Press Enter to quit...");
     getchar();
 
-
     return 0;
 }
 
