@@ -56,7 +56,15 @@ namespace esnd
             StreamLoadStatus initialize();
 
             void onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount) override;
+            virtual size_t onRead(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead)
+            {
+                return 0;
+            }
 
+            virtual ma_bool32 onSeek(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin)
+            {
+                return 0;
+            }
 
             /*!
              * Samples to store in case they are to be exported to a file.

@@ -17,10 +17,38 @@ esnddemo::ProgramManager::ProgramManager(const std::string &title, const sf::Vec
 
 bool esnddemo::ProgramManager::initialize()
 {
+    initializeMusicStream();
     initializeEmuStream();
     initializeAudioManager();
     initializeImGui();
     return true;
+}
+
+void esnddemo::ProgramManager::initializeMusicStream()
+{
+    std::string wavPath =  "./../../content/juhani_junkala/level1.wav";
+    std::string oggPath =   "./../../content/juhani_junkala/level2.ogg";
+    std::string mp3Path =   "./../../content/juhani_junkala/level3.mp3";
+    std::string flacPath =   "./../../content/juhani_junkala/ending.flac";
+
+    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("WAV ", wavPath));
+    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("OGG ", oggPath));
+    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("MP3 ", mp3Path));
+    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("FLAC", flacPath));
+
+    for(auto &stream : m_musicStreams)
+    {
+        stream->addFilter<esnd::BiquadFilter>(    "Biquad:     ")->isActive = false;
+        stream->addFilter<esnd::LowpassFilter1>(  "Lowpass 1:  ", 200)->isActive = false;
+        stream->addFilter<esnd::LowpassFilter2>(  "Lowpass 2:  ", 200, 1)->isActive = false;
+        stream->addFilter<esnd::HighpassFilter1>( "Highpass 1: ", 1000)->isActive = false;
+        stream->addFilter<esnd::HighpassFilter2>( "Highpass 2: ", 1000, 1)->isActive = false;
+        stream->addFilter<esnd::BandpassFilter>(  "Bandpass:   ", 200, 1)->isActive = false;
+        stream->addFilter<esnd::PeakingEqFilter>( "Peaking EQ: ", 1, 1, 1000)->isActive = false;
+        stream->addFilter<esnd::NotchingFilter>(  "Notching:   ", 1, 1000)->isActive = false;
+        stream->addFilter<esnd::LowshelfFilter>(  "Lowshelf:   ", 5, 1, 1000)->isActive = false;
+        stream->addFilter<esnd::HighshelfFilter>( "Highshelf:  ", 5, 1, 1000)->isActive = false;
+    }
 }
 
 void esnddemo::ProgramManager::initializeEmuStream()
@@ -152,12 +180,46 @@ void esnddemo::ProgramManager::draw()
 
 void esnddemo::ProgramManager::drawForms()
 {
+    drawMusicStreamForm();
     drawEmuStreamForm();
     drawAudioManagerForm();
     drawFilterForm();
     drawWaveformForm();
     drawNoiseForm();
     drawWaveformPianoForm();
+}
+
+void esnddemo::ProgramManager::drawMusicStreamForm()
+{
+    ImGui::Begin("Music");
+    for(auto &stream : m_musicStreams)
+    {
+        ImGui::Text(stream->getId().c_str()); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Play###Play{0}", stream->getId()).c_str())) stream->play(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Stop###Stop{0}", stream->getId()).c_str())) stream->stop(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Filter###Filter{0}", stream->getId()).c_str())) m_streamForFilter = stream.get(); ImGui::SameLine();
+        if(ImGui::SmallButton(fmt::format("Seek###Seek{0}", stream->getId()).c_str())) stream->seek(m_seek); ImGui::SameLine();
+
+        ImGui::PushItemWidth(100);
+        ImGui::DragFloat(fmt::format("Volume###Volume{0}", stream->getId()).c_str(),
+                         stream->getVolumePtr(), 0.05f, 0.0f, 1.5f);
+        ImGui::PopItemWidth();
+    }
+    ImGui::PushItemWidth(100);
+    if(ImGui::InputInt("Seek value(ms)###seek_music", &m_seek, 1000, 500))
+    {
+        if(m_seek < 0) m_seek = 0;
+    }
+    ImGui::PopItemWidth();
+    ImGui::NewLine();
+    if(ImGui::Button("STOP!###stop_music", {100, 40}))
+    {
+        for(auto &stream : m_streams)
+            stream->stop();
+    }
+
+
+    ImGui::End();
 }
 
 void esnddemo::ProgramManager::drawEmuStreamForm()
@@ -697,3 +759,5 @@ void esnddemo::ProgramManager::shutdown()
     for(auto &waveform : m_waveforms)
         waveform->onShutdown();
 }
+
+

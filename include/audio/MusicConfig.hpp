@@ -19,6 +19,7 @@ namespace esnd
             void initialize(uint32_t channels, uint32_t sampleRate)
             {
                 dec_config = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
+                //dec_config = ma_decoder_config_init(ma_format_f32, channels, sampleRate);
                 //dec_config_in = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
                 //dec_config_out = ma_decoder_config_init(ma_format_s16, channels, sampleRate);
             }

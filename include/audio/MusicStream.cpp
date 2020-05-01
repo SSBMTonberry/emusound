@@ -19,9 +19,12 @@ void esnd::musiccb::onDataCallback(ma_device *pDevice, void *pOutput, const void
 
 void esnd::MusicStream::onGetData(ma_device *pDevice, void *pOutput, const void *pInput, ma_uint32 frameCount)
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     size_t bufferRead = ma_decoder_read_pcm_frames(&m_config.decoder, pOutput, frameCount);
 
-    ma_apply_volume_factor_pcm_frames(pOutput, bufferRead, ma_format_s16, m_channels, m_volume);
+    int filterStatus = processFilters(pOutput, bufferRead, pOutput);
+
+    ma_apply_volume_factor_pcm_frames(pOutput, bufferRead, m_config.decoder.outputFormat, m_channels, m_volume);
 }
 
 
@@ -87,13 +90,12 @@ esnd::StreamLoadStatus esnd::MusicStream::initialize()
         return esnd::StreamLoadStatus::DecoderInitError;
     }
 
-    m_config.decoder.pUserData = this;
-
     m_config.deviceConfig = ma_device_config_init(ma_device_type_playback);
     m_config.deviceConfig.playback.format   = m_config.decoder.outputFormat;
     m_config.deviceConfig.playback.channels = m_config.decoder.outputChannels;
     m_config.deviceConfig.sampleRate        = m_config.decoder.outputSampleRate;
     m_config.deviceConfig.dataCallback      = esnd::musiccb::onDataCallback;
+    m_config.deviceConfig.pUserData         = &m_config.decoder; //this;
     m_config.deviceConfig.pUserData         = this; //&m_config.decoder; //this;
     //m_config.deviceConfig.stopCallback      = onStop;
 
@@ -131,6 +133,7 @@ void esnd::MusicStream::stop()
 
 void esnd::MusicStream::seek(int offset)
 {
+    std::lock_guard<std::mutex> guard(m_mutex);
     ma_decoder_seek_to_pcm_frame(&m_config.decoder, offset);
 }
 

@@ -22,6 +22,7 @@ namespace esnddemo
 
             bool initialize();
             void initializeEmuStream();
+            void initializeMusicStream();
             void initializeAudioManager();
 
             bool run();
@@ -35,6 +36,7 @@ namespace esnddemo
             void initializeImGui();
 
             void drawForms();
+            void drawMusicStreamForm();
             void drawEmuStreamForm();
             void drawFilterForm();
             void drawWaveformForm();
@@ -58,10 +60,11 @@ namespace esnddemo
             sf::RenderWindow m_window;
 
             std::vector<std::unique_ptr<esnd::ISoundStream>> m_streams;
+            std::vector<std::unique_ptr<esnd::MusicStream>> m_musicStreams;
             std::vector<std::unique_ptr<esnd::Waveform>> m_waveforms;
             std::vector<std::unique_ptr<esnd::Noise>> m_noises;
 
-            esnd::EmuStream *m_streamForFilter = nullptr;
+            esnd::ISoundStream *m_streamForFilter = nullptr;
             esnd::Waveform *m_pianoWaveform = nullptr;
             bool m_playPiano = false;
 
