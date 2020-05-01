@@ -9,5 +9,8 @@
 #define DR_WAV_IMPLEMENTATION
 #include "../../include/external/dr_wav.h" /* Enables WAV decoding. */
 
+//#define STB_VORBIS_IMPLEMENTATION
+#include "../../include/external/stb_vorbis.h"
+
 #define MINIAUDIO_IMPLEMENTATION
 #include "../../include/external/emusound_external.h"

@@ -9,6 +9,7 @@
 
 //#include "external/emusound_external.h"
 #include "audio/EmuStream.h"
+#include "audio/MusicStream.h"
 #include "audio/Waveform.h"
 #include "audio/Noise.h"
 #include "audio/Notes.hpp"

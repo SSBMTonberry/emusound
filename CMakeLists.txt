@@ -105,7 +105,7 @@ set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/
         include/audio/filters/BandpassFilter.hpp include/audio/filters/PeakingEqFilter.hpp include/audio/filters/NotchingFilter.hpp
         include/audio/filters/LowshelfFilter.hpp include/audio/filters/HighshelfFilter.hpp src/audio/Waveform.cpp
         include/audio/Waveform.h include/audio/WaveformConfig.hpp include/audio/Notes.hpp
-        include/audio/Noise.cpp include/audio/Noise.h include/external/dr_mp3.h include/external/dr_flac.h src/external/stb_vorbis.c)
+        include/audio/Noise.cpp include/audio/Noise.h include/external/dr_mp3.h include/external/dr_flac.h include/external/stb_vorbis.h include/audio/MusicStream.cpp include/audio/MusicStream.h include/audio/MusicConfig.hpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/external_libs/source/
         ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src)
