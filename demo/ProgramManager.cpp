@@ -85,6 +85,14 @@ void esnddemo::ProgramManager::initializeEmuStream()
     m_noises.emplace_back(std::make_unique<esnd::Noise>("White:   ",1, 1.0, esnd::NoiseType::White));
     m_noises.emplace_back(std::make_unique<esnd::Noise>("Pink:     ",1, 1.0, esnd::NoiseType::Pink));
     m_noises.emplace_back(std::make_unique<esnd::Noise>("Brownian: ",1, 1.0, esnd::NoiseType::Brownian));
+
+    //Waveforms are a bit loud, so set the volume to 50%
+    for(auto &waveform : m_waveforms)
+        waveform->setVolume(0.50f);
+
+    //Noises are noisy, so adjust the volume a BIT down.
+    for(auto &noise : m_noises)
+        noise->setVolume(0.15f);
 }
 
 void esnddemo::ProgramManager::initializeAudioManager()
@@ -121,6 +129,7 @@ void esnddemo::ProgramManager::initializeImGui()
     ImGui::CreateContext(); //IMGUI 1.60
     m_style = &ImGui::GetStyle();
     m_io = &ImGui::GetIO();
+    m_io->IniFilename = nullptr; //Remove .ini-file
 
     ImGui::SFML::Init(m_window);
     //Enable Ctrl+TAB (New in ImGui 1.63)
@@ -191,6 +200,13 @@ void esnddemo::ProgramManager::drawForms()
 
 void esnddemo::ProgramManager::drawMusicStreamForm()
 {
+    static bool first = true;
+    if(first)
+    {
+        ImGui::SetNextWindowPos({0.f, (float) m_window.getSize().y * 0.50f});
+        ImGui::SetNextWindowSize({(float) m_window.getSize().x * 0.34f, (float) m_window.getSize().y * 0.25f});
+        first = false;
+    }
     ImGui::Begin("Music");
     for(auto &stream : m_musicStreams)
     {
@@ -224,7 +240,14 @@ void esnddemo::ProgramManager::drawMusicStreamForm()
 
 void esnddemo::ProgramManager::drawEmuStreamForm()
 {
-    ImGui::Begin("Audio");
+    static bool first = true;
+    if(first)
+    {
+        ImGui::SetNextWindowPos({0.f, (float) m_window.getSize().y * 0.25f});
+        ImGui::SetNextWindowSize({(float) m_window.getSize().x * 0.34f, (float) m_window.getSize().y * 0.25f});
+        first = false;
+    }
+    ImGui::Begin("Emu music");
     for(auto &stream : m_streams)
     {
         esnd::EmuStream *emuStream = dynamic_cast<esnd::EmuStream*>(stream.get());
@@ -265,6 +288,13 @@ void esnddemo::ProgramManager::drawAudioManagerForm()
 
 void esnddemo::ProgramManager::drawWaveformPianoForm()
 {
+    static bool first = true;
+    if(first)
+    {
+        ImGui::SetNextWindowPos({(float) m_window.getSize().x * 0.66f, 0});
+        ImGui::SetNextWindowSize({(float) m_window.getSize().x * 0.34f, (float) m_window.getSize().y * 0.25f});
+        first = false;
+    }
     ImGui::Begin("Waveform piano");
     if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
@@ -309,6 +339,13 @@ void esnddemo::ProgramManager::drawWaveformPianoPart(const std::string &id, doub
 
 void esnddemo::ProgramManager::drawWaveformForm()
 {
+    static bool first = true;
+    if(first)
+    {
+        ImGui::SetNextWindowPos({0, 0});
+        ImGui::SetNextWindowSize({(float) m_window.getSize().x * 0.66f, (float) m_window.getSize().y * 0.25f});
+        first = false;
+    }
     ImGui::Begin("Waveforms");
     for(auto &waveform : m_waveforms)
     {
@@ -351,6 +388,13 @@ void esnddemo::ProgramManager::drawWaveformForm()
 
 void esnddemo::ProgramManager::drawNoiseForm()
 {
+    static bool first = true;
+    if(first)
+    {
+        ImGui::SetNextWindowPos({0, (float) m_window.getSize().y * 0.75f});
+        ImGui::SetNextWindowSize({(float) m_window.getSize().x * 0.50f, (float) m_window.getSize().y * 0.15f});
+        first = false;
+    }
     ImGui::Begin("Noise");
     for(auto &noise : m_noises)
     {
@@ -396,6 +440,14 @@ void esnddemo::ProgramManager::drawFilterForm()
 {
     std::string filterid = (m_streamForFilter == nullptr) ? "" : m_streamForFilter->getId();
     std::string imguiId = (m_streamForFilter == nullptr) ? "Filters###Filters" : fmt::format("Filters ({0})###Filters", filterid);
+
+    static bool first = true;
+    if(first)
+    {
+        ImGui::SetNextWindowPos({(float) m_window.getSize().x * 0.34f, (float) m_window.getSize().y * 0.25f});
+        ImGui::SetNextWindowSize({(float) m_window.getSize().x * 0.66f, (float) m_window.getSize().y * 0.50f});
+        first = false;
+    }
     ImGui::Begin(imguiId.c_str());
     if(m_streamForFilter != nullptr)
     {
