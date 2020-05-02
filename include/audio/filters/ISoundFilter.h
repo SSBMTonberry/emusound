@@ -28,6 +28,8 @@ namespace esnd
             virtual const esnd::FilterType getFilterType() const = 0;
             bool isActive = true;
 
+        protected:
+            ma_decoder *m_decoder;
     };
 }
 

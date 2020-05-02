@@ -13,15 +13,16 @@ namespace esnd
     {
         public:
             PeakingEqFilter() = default;
-            PeakingEqFilter(const std::string &id, double gainDb, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            PeakingEqFilter(ma_decoder *decoder, const std::string &id, double gainDb, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
-                init(id, gainDb, q, frequency, channels, sampleRate);
+                init(decoder, id, gainDb, q, frequency, channels, sampleRate);
             }
 
-            int init(const std::string &id, double gainDb, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            int init(ma_decoder *decoder, const std::string &id, double gainDb, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
+                m_decoder = decoder;
                 m_id = id;
-                config = ma_peak2_config_init(ma_format_s16, channels, sampleRate, gainDb, q, frequency);
+                config = ma_peak2_config_init(m_decoder->outputFormat, channels, sampleRate, gainDb, q, frequency);
                 return ma_peak2_init(&config, &filter);
             }
 

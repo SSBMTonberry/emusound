@@ -94,12 +94,13 @@ namespace esnd
 
             std::vector<std::unique_ptr<ISoundFilter>> m_filters;
             std::string m_id;
+            ma_decoder *m_currentDecoder = nullptr; //This must be set by the inheriting class
     };
 
     template<typename T, typename... Args>
     T *ISoundStream::addFilter(Args &&... args)
     {
-        m_filters.emplace_back(new T(args...));
+        m_filters.emplace_back(new T(m_currentDecoder, args...));
         return dynamic_cast<T*>(m_filters[m_filters.size() - 1].get());
     }
 

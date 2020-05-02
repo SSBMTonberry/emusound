@@ -124,7 +124,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
         return esnd::StreamLoadStatus::StreamStartFailure;
     }
 
-
+    m_currentDecoder = &m_config.decoder;
 
     return esnd::StreamLoadStatus::OK;
 }

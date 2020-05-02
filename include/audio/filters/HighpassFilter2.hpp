@@ -13,15 +13,16 @@ namespace esnd
     {
         public:
             HighpassFilter2() = default;
-            HighpassFilter2(const std::string &id, double cutoffFrequency, double q, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            HighpassFilter2(ma_decoder *decoder, const std::string &id, double cutoffFrequency, double q, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
-                init(id, cutoffFrequency, q, channels, sampleRate);
+                init(decoder, id, cutoffFrequency, q, channels, sampleRate);
             }
 
-            int init(const std::string &id, double cutoffFrequency, double q, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            int init(ma_decoder *decoder, const std::string &id, double cutoffFrequency, double q, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
+                m_decoder = decoder;
                 m_id = id;
-                config = ma_hpf2_config_init(ma_format_s16, channels, sampleRate, cutoffFrequency, q);
+                config = ma_hpf2_config_init(m_decoder->outputFormat, channels, sampleRate, cutoffFrequency, q);
                 return ma_hpf2_init(&config, &filter);
             }
 

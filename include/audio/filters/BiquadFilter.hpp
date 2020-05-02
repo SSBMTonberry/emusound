@@ -13,15 +13,16 @@ namespace esnd
     {
         public:
             BiquadFilter() = default;
-            BiquadFilter(const std::string &id, double b0 = 1, double b1 = 1, double b2 = 1, double a0 = 1, double a1 = 1, double a2 = 1, uint32_t channels = 2)
+            BiquadFilter(ma_decoder *decoder, const std::string &id, double b0 = 1, double b1 = 1, double b2 = 1, double a0 = 1, double a1 = 1, double a2 = 1, uint32_t channels = 2)
             {
-                init(id, b0, b1, b2, a0, a1, a2, channels);
+                init(decoder, id, b0, b1, b2, a0, a1, a2, channels);
             }
 
-            int init(const std::string &id, double b0 = 1, double b1 = 1, double b2 = 1, double a0 = 1, double a1 = 1, double a2 = 1, uint32_t channels = 2)
+            int init(ma_decoder *decoder, const std::string &id, double b0 = 1, double b1 = 1, double b2 = 1, double a0 = 1, double a1 = 1, double a2 = 1, uint32_t channels = 2)
             {
+                m_decoder = decoder;
                 m_id = id;
-                config = ma_biquad_config_init(ma_format_s16, channels, b0, b1, b2, a0, a1, a2);
+                config = ma_biquad_config_init(m_decoder->outputFormat, channels, b0, b1, b2, a0, a1, a2);
                 return ma_biquad_init(&config, &filter);
             }
 

@@ -13,15 +13,16 @@ namespace esnd
     {
         public:
             NotchingFilter() = default;
-            NotchingFilter(const std::string &id, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            NotchingFilter(ma_decoder *decoder, const std::string &id, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
-                init(id, q, frequency, channels, sampleRate);
+                init(decoder, id, q, frequency, channels, sampleRate);
             }
 
-            int init(const std::string &id, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
+            int init(ma_decoder *decoder, const std::string &id, double q, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
+                m_decoder = decoder;
                 m_id = id;
-                config = ma_notch2_config_init(ma_format_s16, channels, sampleRate, q, frequency);
+                config = ma_notch2_config_init(m_decoder->outputFormat, channels, sampleRate, q, frequency);
                 return ma_notch2_init(&config, &filter);
             }
 
