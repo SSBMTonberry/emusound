@@ -134,7 +134,8 @@ void esnd::MusicStream::stop()
 void esnd::MusicStream::seek(int offset)
 {
     std::lock_guard<std::mutex> guard(m_mutex);
-    ma_decoder_seek_to_pcm_frame(&m_config.decoder, offset);
+    uint32_t toSeek = m_config.dec_config.sampleRate * (offset / 1000);
+    ma_decoder_seek_to_pcm_frame(&m_config.decoder, toSeek);
 }
 
 uint32_t esnd::MusicStream::getChannelCount() const
@@ -154,7 +155,10 @@ esnd::SoundStatus esnd::MusicStream::getStatus() const
 
 void esnd::MusicStream::onShutdown()
 {
-
+    ma_mutex_uninit(&m_config.device.lock);
+    ma_device_uninit(&m_config.device);
+    ma_context_uninit(m_config.device.pContext);
+    ma_decoder_uninit(&m_config.decoder);
 }
 
 void esnd::MusicStream::setVolume(float volume)

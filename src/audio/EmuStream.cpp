@@ -433,7 +433,6 @@ size_t esnd::EmuStream::onRead(ma_decoder *pDecoder, void *pBufferOut, size_t by
     std::lock_guard<std::mutex> guard(m_mutex);
     size_t bufferSize = bytesToRead / 2;
     m_emu->play(bufferSize, (short*) pBufferOut);
-
     int filterStatus = processFilters(pBufferOut, bufferSize, pBufferOut);
 
     ma_apply_volume_factor_pcm_frames(pBufferOut, bufferSize / 2, ma_format_s16, 2, m_volume);

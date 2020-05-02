@@ -214,7 +214,7 @@ void esnddemo::ProgramManager::drawMusicStreamForm()
     ImGui::NewLine();
     if(ImGui::Button("STOP!###stop_music", {100, 40}))
     {
-        for(auto &stream : m_streams)
+        for(auto &stream : m_musicStreams)
             stream->stop();
     }
 
@@ -754,6 +754,9 @@ void esnddemo::ProgramManager::handleHighshelfFilter(esnd::HighshelfFilter *filt
 void esnddemo::ProgramManager::shutdown()
 {
     for(auto &stream : m_streams)
+        stream->onShutdown();
+
+    for(auto &stream : m_musicStreams)
         stream->onShutdown();
 
     for(auto &waveform : m_waveforms)
