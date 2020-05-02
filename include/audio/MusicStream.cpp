@@ -89,7 +89,6 @@ esnd::StreamLoadStatus esnd::MusicStream::initialize()
     if (m_decoderInitStatus != MA_SUCCESS) {
         return esnd::StreamLoadStatus::DecoderInitError;
     }
-
     m_config.deviceConfig = ma_device_config_init(ma_device_type_playback);
     m_config.deviceConfig.playback.format   = m_config.decoder.outputFormat;
     m_config.deviceConfig.playback.channels = m_config.decoder.outputChannels;

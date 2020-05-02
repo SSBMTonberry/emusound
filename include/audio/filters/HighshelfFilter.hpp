@@ -21,7 +21,7 @@ namespace esnd
             int init(const std::string &id, double gainDb, double shelfSlope, double frequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
                 m_id = id;
-                config = ma_hishelf2_config_init(ma_format_s16, 2, 44100, gainDb, shelfSlope, frequency);
+                config = ma_hishelf2_config_init(ma_format_s16, channels, sampleRate, gainDb, shelfSlope, frequency);
                 return ma_hishelf2_init(&config, &filter);
             }
 

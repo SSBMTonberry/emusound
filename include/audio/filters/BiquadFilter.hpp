@@ -21,7 +21,7 @@ namespace esnd
             int init(const std::string &id, double b0 = 1, double b1 = 1, double b2 = 1, double a0 = 1, double a1 = 1, double a2 = 1, uint32_t channels = 2)
             {
                 m_id = id;
-                config = ma_biquad_config_init(ma_format_s16, 2, b0, b1, b2, a0, a1, a2);
+                config = ma_biquad_config_init(ma_format_s16, channels, b0, b1, b2, a0, a1, a2);
                 return ma_biquad_init(&config, &filter);
             }
 

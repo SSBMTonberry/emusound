@@ -21,7 +21,7 @@ namespace esnd
             int init(const std::string &id, double cutoffFrequency, uint32_t channels = 2, uint32_t sampleRate = 44100)
             {
                 m_id = id;
-                config = ma_lpf1_config_init(ma_format_s16, 2, 44100, cutoffFrequency);
+                config = ma_lpf1_config_init(ma_format_s16, channels, sampleRate, cutoffFrequency);
                 return ma_lpf1_init(&config, &filter);
             }
 
