@@ -22,8 +22,7 @@ void esnd::MusicStream::onGetData(ma_device *pDevice, void *pOutput, const void 
     std::lock_guard<std::mutex> guard(m_mutex);
     size_t bufferRead = ma_decoder_read_pcm_frames(&m_config.decoder, pOutput, frameCount);
 
-    int filterStatus = processFilters(pOutput, bufferRead, pOutput);
-
+    int filterStatus = processFilters(pOutput, bufferRead * 2, pOutput);
     ma_apply_volume_factor_pcm_frames(pOutput, bufferRead, m_config.decoder.outputFormat, m_channels, m_volume);
 }
 
@@ -94,7 +93,7 @@ esnd::StreamLoadStatus esnd::MusicStream::initialize()
     m_config.deviceConfig.playback.channels = m_config.decoder.outputChannels;
     m_config.deviceConfig.sampleRate        = m_config.decoder.outputSampleRate;
     m_config.deviceConfig.dataCallback      = esnd::musiccb::onDataCallback;
-    m_config.deviceConfig.pUserData         = &m_config.decoder; //this;
+    //m_config.deviceConfig.pUserData         = &m_config.decoder; //this;
     m_config.deviceConfig.pUserData         = this; //&m_config.decoder; //this;
     //m_config.deviceConfig.stopCallback      = onStop;
 
