@@ -60,6 +60,22 @@ else()
     add_subdirectory(${PROJECT_SOURCE_DIR}/external_libs/source/sfml ${PROJECT_SOURCE_DIR}/external_libs/source/sfml/cmake-build-release)
 endif()
 
+option(USE_GME_AY "Include support for AY" ON)
+option(USE_GME_GBS "Include support for GBS" ON)
+option(USE_GME_GYM "Include support for GYM" ON)
+option(USE_GME_HES "Include support for HES" ON)
+option(USE_GME_KSS "Include support for KSS" ON)
+option(USE_GME_NSF "Include support for NSF" ON)
+option(USE_GME_NSFE "Include support for NSFE" ON)
+option(USE_GME_SAP "Include support for SAP" ON)
+option(USE_GME_SPC "Include support for SPC" ON)
+option(USE_GME_VGM "Include support for VGM" ON)
+
+option(USE_OGG "Include support for OGG/VORBIS" ON)
+option(USE_MP3 "Include support for MP3" ON)
+option(USE_WAV "Include support for WAV" ON)
+option(USE_FLAC "Include support for FLAC" ON)
+
 configure_file (
         "${PROJECT_SOURCE_DIR}/EmusoundConfig.h.in"
         "${PROJECT_SOURCE_DIR}/include/EmusoundConfig.h"
@@ -112,6 +128,22 @@ include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOU
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
 
 add_subdirectory(demo)
+
+unset(USE_GME_AY CACHE)
+unset(USE_GME_GBS CACHE)
+unset(USE_GME_GYM CACHE)
+unset(USE_GME_HES CACHE)
+unset(USE_GME_KSS CACHE)
+unset(USE_GME_NSF CACHE)
+unset(USE_GME_NSFE CACHE)
+unset(USE_GME_SAP CACHE)
+unset(USE_GME_SPC CACHE)
+unset(USE_GME_VGM CACHE)
+
+unset(USE_OGG CACHE)
+unset(USE_MP3 CACHE)
+unset(USE_WAV CACHE)
+unset(USE_FLAC CACHE)
 
 unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
 unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable

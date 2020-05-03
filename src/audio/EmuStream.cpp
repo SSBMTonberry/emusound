@@ -97,7 +97,8 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
     m_decoderInitStatus = ma_decoder_init_raw(esnd::emucb::onReadCallback, esnd::emucb::onSeekCallback, &m_config.decoder,
                                               &m_config.dec_config_in, &m_config.dec_config_out, &m_config.decoder);
 
-    if (m_decoderInitStatus != MA_SUCCESS) {
+    if (m_decoderInitStatus != MA_SUCCESS)
+    {
         return esnd::StreamLoadStatus::DecoderInitError;
     }
 
@@ -111,13 +112,15 @@ esnd::StreamLoadStatus esnd::EmuStream::initialize()
     m_config.deviceConfig.pUserData         = this; //&m_config.decoder; //this;
     //m_config.deviceConfig.stopCallback      = onStop;
 
-    if (ma_device_init(NULL, &m_config.deviceConfig, &m_config.device) != MA_SUCCESS) {
+    if (ma_device_init(NULL, &m_config.deviceConfig, &m_config.device) != MA_SUCCESS)
+    {
         printf("Failed to open playback device.\n");
         ma_decoder_uninit(&m_config.decoder);
         return esnd::StreamLoadStatus::StreamOpenFailure;
     }
 
-    if (ma_device_start(&m_config.device) != MA_SUCCESS) {
+    if (ma_device_start(&m_config.device) != MA_SUCCESS)
+    {
         printf("Failed to start playback device.\n");
         ma_device_uninit(&m_config.device);
         ma_decoder_uninit(&m_config.decoder);
