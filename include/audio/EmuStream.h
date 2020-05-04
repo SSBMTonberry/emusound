@@ -69,6 +69,8 @@ namespace esnd
             [[nodiscard]] uint32_t getChannelCount() const override;
             [[nodiscard]] uint32_t getSampleRate() const override;
 
+            StreamLoadStatus getLoadStatus() const;
+
             float getVolume() const;
             float* getVolumePtr();
 
@@ -141,6 +143,8 @@ namespace esnd
             ma_result m_decoderInitStatus;
 
             std::mutex m_mutex; //Mutex for thread protection
+
+            StreamLoadStatus m_loadStatus;
     };
 }
 

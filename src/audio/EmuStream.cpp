@@ -140,7 +140,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
         m_emu = nullptr;
     }
 
-    esnd::StreamLoadStatus status = esnd::StreamLoadStatus::OK;
+    m_loadStatus = esnd::StreamLoadStatus::OK;
 
     // Determine file type
     gme_type_t file_type;
@@ -149,7 +149,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
 
     if(m_loadMode == StreamMode::File)
     {
-        if(hasEmuError(gme_identify_file( m_filename.c_str(), &file_type ) )) return esnd::StreamLoadStatus::EmuFileIdentificationError;
+        if(hasEmuError(gme_identify_file( m_filename.c_str(), &file_type ) )) return m_loadStatus = esnd::StreamLoadStatus::EmuFileIdentificationError;
     }
     else if(m_loadMode == StreamMode::Memory)
     {
@@ -159,7 +159,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
 
     if ( !file_type )
     {
-        return esnd::StreamLoadStatus::EmuUnsupportedMusicType; //!handleError("Unsupported music type");
+        return m_loadStatus = esnd::StreamLoadStatus::EmuUnsupportedMusicType; //!handleError("Unsupported music type");
     }
 
     // Create emulator and set sample rate
@@ -167,22 +167,22 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
 
     if ( !m_emu )
     {
-        return esnd::StreamLoadStatus::EmuOutOfMemory;//!handleError("Out of memory");
+        return m_loadStatus = esnd::StreamLoadStatus::EmuOutOfMemory;//!handleError("Out of memory");
     }
 
-    if(hasEmuError( m_emu->set_sample_rate( m_sampleRate ))) return esnd::StreamLoadStatus::EmuInvalidSampleRate;
+    if(hasEmuError( m_emu->set_sample_rate( m_sampleRate ))) return m_loadStatus = esnd::StreamLoadStatus::EmuInvalidSampleRate;
 
     if(m_loadMode == StreamMode::File)
     {
-        if(hasEmuError(m_emu->load_file(m_filename.c_str()))) return esnd::StreamLoadStatus::EmuFileLoadError;
+        if(hasEmuError(m_emu->load_file(m_filename.c_str()))) return m_loadStatus = esnd::StreamLoadStatus::EmuFileLoadError;
     }
     else if(m_loadMode == StreamMode::Memory)
     {
-        if(hasEmuError(m_emu->load_mem(m_data, m_dataSize))) return esnd::StreamLoadStatus::EmuMemoryLoadError;
+        if(hasEmuError(m_emu->load_mem(m_data, m_dataSize))) return m_loadStatus = esnd::StreamLoadStatus::EmuMemoryLoadError;
     }
 
     m_numberOfTracks = gme_track_count(m_emu);
-    if(hasEmuError(m_emu->start_track( m_track ))) return esnd::StreamLoadStatus::EmuInvalidTrack;
+    if(hasEmuError(m_emu->start_track( m_track ))) return m_loadStatus = esnd::StreamLoadStatus::EmuInvalidTrack;
 
     //Load tracks
     for(int i = 0; i < m_numberOfTracks; ++i)
@@ -190,7 +190,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
         m_tracks.emplace_back();
         bool success = m_tracks[i].load(m_emu, i);
         if(!success)
-            status = esnd::StreamLoadStatus::EmuErrorLoadingTrackData;
+            m_loadStatus = esnd::StreamLoadStatus::EmuErrorLoadingTrackData;
             //SystemLog::get()->addError(fmt::format("Error loading track: {0}: {1}", i, m_tracks[i].getErrorText()));
     }
 
@@ -217,7 +217,7 @@ esnd::StreamLoadStatus esnd::EmuStream::initializeEmu()
     //m_equalizer.initialize(m_emu);
     this->pause();
 
-    return status;
+    return m_loadStatus;
 }
 
 void esnd::EmuStream::muteChannel(int channelNo, bool mute)
@@ -516,4 +516,9 @@ void esnd::EmuStream::onShutdown()
         delete m_emu;
         m_emu = nullptr;
     }
+}
+
+esnd::StreamLoadStatus esnd::EmuStream::getLoadStatus() const
+{
+    return m_loadStatus;
 }

@@ -50,6 +50,8 @@ namespace esnd
             float getVolume() const;
             float* getVolumePtr();
 
+            StreamLoadStatus getLoadStatus() const;
+
             void onShutdown() override;
 
         protected:
@@ -90,6 +92,8 @@ namespace esnd
             MusicConfig m_config;
             ma_result m_decoderInitStatus;
             std::mutex m_mutex; //Mutex for thread protection
+
+            StreamLoadStatus m_loadStatus;
     };
 }
 

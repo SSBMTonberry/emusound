@@ -87,7 +87,7 @@ esnd::StreamLoadStatus esnd::MusicStream::initialize()
 
     if (m_decoderInitStatus != MA_SUCCESS)
     {
-        return esnd::StreamLoadStatus::DecoderInitError;
+        return m_loadStatus = esnd::StreamLoadStatus::DecoderInitError;
     }
     m_config.deviceConfig = ma_device_config_init(ma_device_type_playback);
     m_config.deviceConfig.playback.format   = m_config.decoder.outputFormat;
@@ -102,7 +102,7 @@ esnd::StreamLoadStatus esnd::MusicStream::initialize()
     {
         printf("Failed to open playback device.\n");
         ma_decoder_uninit(&m_config.decoder);
-        return esnd::StreamLoadStatus::StreamOpenFailure;
+        return m_loadStatus = esnd::StreamLoadStatus::StreamOpenFailure;
     }
 
     if (ma_device_start(&m_config.device) != MA_SUCCESS)
@@ -110,12 +110,12 @@ esnd::StreamLoadStatus esnd::MusicStream::initialize()
         printf("Failed to start playback device.\n");
         ma_device_uninit(&m_config.device);
         ma_decoder_uninit(&m_config.decoder);
-        return esnd::StreamLoadStatus::StreamStartFailure;
+        return m_loadStatus = esnd::StreamLoadStatus::StreamStartFailure;
     }
 
     m_currentDecoder = &m_config.decoder;
 
-    return esnd::StreamLoadStatus::OK;
+    return m_loadStatus = esnd::StreamLoadStatus::OK;
 }
 
 void esnd::MusicStream::play()
@@ -177,4 +177,9 @@ float esnd::MusicStream::getVolume() const
 float *esnd::MusicStream::getVolumePtr()
 {
     return &m_volume;
+}
+
+esnd::StreamLoadStatus esnd::MusicStream::getLoadStatus() const
+{
+    return m_loadStatus;
 }

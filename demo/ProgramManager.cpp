@@ -31,10 +31,30 @@ void esnddemo::ProgramManager::initializeMusicStream()
     std::string mp3Path =   "./../../content/juhani_junkala/level3.mp3";
     std::string flacPath =   "./../../content/juhani_junkala/ending.flac";
 
-    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("WAV ", wavPath));
-    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("OGG ", oggPath));
-    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("MP3 ", mp3Path));
-    m_musicStreams.emplace_back(std::make_unique<esnd::MusicStream>("FLAC", flacPath));
+    auto wav = std::make_unique<esnd::MusicStream>("WAV ", wavPath);
+    auto ogg = std::make_unique<esnd::MusicStream>("OGG ", oggPath);
+    auto mp3 = std::make_unique<esnd::MusicStream>("MP3 ", mp3Path);
+    auto flac = std::make_unique<esnd::MusicStream>("FLAC", flacPath);
+
+    if(wav->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_musicStreams.emplace_back(std::move(wav));
+    else
+        wav->onShutdown();
+
+    if(ogg->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_musicStreams.emplace_back(std::move(ogg));
+    else
+        ogg->onShutdown();
+
+    if(mp3->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_musicStreams.emplace_back(std::move(mp3));
+    else
+        mp3->onShutdown();
+
+    if(flac->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_musicStreams.emplace_back(std::move(flac));
+    else
+        flac->onShutdown();
 
     for(auto &stream : m_musicStreams)
     {
@@ -49,6 +69,8 @@ void esnddemo::ProgramManager::initializeMusicStream()
         stream->addFilter<esnd::LowshelfFilter>(  "Lowshelf:   ", 5, 1, 1000)->isActive = false;
         stream->addFilter<esnd::HighshelfFilter>( "Highshelf:  ", 5, 1, 1000)->isActive = false;
     }
+
+
 }
 
 void esnddemo::ProgramManager::initializeEmuStream()
@@ -58,10 +80,29 @@ void esnddemo::ProgramManager::initializeEmuStream()
     std::string spcPath =   "./../../content/emu_tests/test.spc";
     std::string vgmPath =   "./../../content/emu_tests/test.vgm";
 
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("NSFE", nsfePath));//.operator*().setId("NSFE");
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("NSF ", (void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE));//.operator*().setId("NSF ");
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("SPC ", spcPath));//.operator*().setId("SPC ");
-    m_streams.emplace_back(std::make_unique<esnd::EmuStream>("VGM ", vgmPath));//.operator*().setId("VGM ");
+    auto nsfe = std::make_unique<esnd::EmuStream>("NSFE", nsfePath);
+    auto nsf = std::make_unique<esnd::EmuStream>("NSF ", (void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
+    auto spc = std::make_unique<esnd::EmuStream>("SPC ", spcPath);
+    auto vgm = std::make_unique<esnd::EmuStream>("VGM ", vgmPath);
+    if(nsfe->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_streams.emplace_back(std::move(nsfe));
+    else
+        nsfe->onShutdown();
+
+    if(nsf->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_streams.emplace_back(std::move(nsf));
+    else
+        nsf->onShutdown();
+
+    if(spc->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_streams.emplace_back(std::move(spc));
+    else
+        spc->onShutdown();
+
+    if(vgm->getLoadStatus() == esnd::StreamLoadStatus::OK)
+        m_streams.emplace_back(std::move(vgm));
+    else
+        vgm->onShutdown();
 
     for(auto &stream : m_streams)
     {
