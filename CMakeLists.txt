@@ -60,16 +60,16 @@ else()
     add_subdirectory(${PROJECT_SOURCE_DIR}/external_libs/source/sfml ${PROJECT_SOURCE_DIR}/external_libs/source/sfml/cmake-build-release)
 endif()
 
-option(USE_GME_AY "Include support for AY" ON)
-option(USE_GME_GBS "Include support for GBS" ON)
-option(USE_GME_GYM "Include support for GYM" ON)
-option(USE_GME_HES "Include support for HES" ON)
-option(USE_GME_KSS "Include support for KSS" ON)
-option(USE_GME_NSF "Include support for NSF" ON)
-option(USE_GME_NSFE "Include support for NSFE" ON)
-option(USE_GME_SAP "Include support for SAP" ON)
-option(USE_GME_SPC "Include support for SPC" ON)
-option(USE_GME_VGM "Include support for VGM" ON)
+option(USE_GME_AY "Include support for AY (ZX Spectrum/Amstrad CPC)" ON)
+option(USE_GME_GBS "Include support for GBS (Nintendo Game Boy)" ON)
+option(USE_GME_GYM "Include support for GYM (Sega Genesis/Mega Drive)" ON)
+option(USE_GME_HES "Include support for HES (NEC TurboGrafx-16/PC Engine)" ON)
+option(USE_GME_KSS "Include support for KSS (MSX Home Computer/other Z80 systems)" ON)
+option(USE_GME_NSF "Include support for NSF (Nintendo NES/Famicom)" ON)
+option(USE_GME_NSFE "Include support for NSFE (Nintendo NES/Famicom Extended)" ON)
+option(USE_GME_SAP "Include support for SAP (Atari systems using POKEY sound chip)" ON)
+option(USE_GME_SPC "Include support for SPC (Super Nintendo/Super Famicom)" ON)
+option(USE_GME_VGM "Include support for VGM (Sega Master System/Mark III, Sega Genesis/Mega Drive,BBC Micro)" ON)
 
 option(USE_OGG "Include support for OGG/VORBIS" ON)
 option(USE_MP3 "Include support for MP3" ON)
@@ -86,31 +86,68 @@ configure_file (
 #        "${PROJECT_SOURCE_DIR}/external_libs/source/caudio/cAudio/include/cAudioBuildSettings.h"
 #)
 
+if(USE_GME_AY)
+    set(GME_AY_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Cpu.cpp
+                  ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Emu.cpp)
+endif()
 
-set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Cpu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Blip_Buffer.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Classic_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Data_Reader.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Dual_Resampler.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Effects_Buffer.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Fir_Resampler.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gb_Apu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gb_Cpu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gb_Oscs.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gbs_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/gme.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gme_File.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gym_Emu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Hes_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Hes_Cpu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Hes_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Kss_Cpu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Kss_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Kss_Scc_Apu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/M3u_Playlist.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Multi_Buffer.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Music_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Apu.cpp
+if(USE_GME_GBS)
+    set(GME_GBS_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gb_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gb_Cpu.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gb_Oscs.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gbs_Emu.cpp )
+endif()
+
+if(USE_GME_GYM)
+    set(GME_GYM_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gym_Emu.cpp)
+endif()
+
+if(USE_GME_HES)
+    set(GME_HES_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Hes_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Hes_Cpu.cpp
+                   ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Hes_Emu.cpp)
+endif()
+
+if(USE_GME_KSS)
+    set(GME_KSS_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Kss_Cpu.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Kss_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Kss_Scc_Apu.cpp)
+endif()
+
+if(USE_GME_NSF OR USE_GME_NSFE)
+    set(GME_NSF_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Apu.cpp
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Cpu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Fme7_Apu.cpp
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Namco_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Oscs.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Vrc6_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nsf_Emu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nsfe_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sap_Apu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sap_Cpu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sap_Emu.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sms_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Snes_Spc.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Cpu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Dsp.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Filter.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Vgm_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Vgm_Emu_Impl.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nes_Vrc6_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nsf_Emu.cpp)
+endif()
+
+if(USE_GME_NSFE)
+    set(GME_NSFE_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Nsfe_Emu.cpp)
+endif()
+
+if(USE_GME_SAP)
+    set(GME_SAP_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sap_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sap_Cpu.cpp
+                   ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sap_Emu.cpp)
+endif()
+
+if(USE_GME_SPC)
+    set(GME_SPC_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Snes_Spc.cpp
+                   ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Cpu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Dsp.cpp
+                   ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Spc_Filter.cpp)
+endif()
+
+if(USE_GME_VGM)
+    set(GME_VGM_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Sms_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Vgm_Emu.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Vgm_Emu_Impl.cpp
         ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2413_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_GENS.cpp
-        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_Nuked.cpp )
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ym2612_Nuked.cpp)
+endif()
+
+set(GME_SOURCE_FILES  ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Blip_Buffer.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Classic_Emu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Data_Reader.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Dual_Resampler.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Effects_Buffer.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Fir_Resampler.cpp  ${PROJECT_SOURCE_DIR}/external_libs/source/gme/gme.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Gme_File.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/M3u_Playlist.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Multi_Buffer.cpp
+        ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Music_Emu.cpp
+        ${GME_AY_SOURCE} ${GME_GBS_SOURCE} ${GME_GYM_SOURCE} ${GME_HES_SOURCE} ${GME_KSS_SOURCE} ${GME_NSF_SOURCE} ${GME_NSFE_SOURCE} ${GME_SAP_SOURCE}
+        ${GME_SPC_SOURCE} ${GME_VGM_SOURCE} )
 
 set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/data/EmuTrackInfo.h
         src/audio/EmuStream.cpp include/audio/EmuStream.h include/Enums.hpp
