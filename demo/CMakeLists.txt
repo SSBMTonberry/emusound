@@ -71,5 +71,10 @@ include_directories(../external_libs/include ../external_libs/include/libgme ../
 add_executable(emusound_demo ${DEMO_SOURCE_FILES})
 
 #message("Brolo: ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a")
-target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system pthread dl ${SFML_DEPENDENCIES} ${SFML_REST})
-#target_link_libraries(emusound_demo ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a pthread asound dl)
+if(ESND_LINUX)
+    target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system pthread dl ${SFML_DEPENDENCIES} ${SFML_REST})
+elseif(ESND_WIN32)
+    target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system ${SFML_DEPENDENCIES} ${SFML_REST})
+elseif(ESND_APPLE)
+    target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system pthread dl ${SFML_DEPENDENCIES} ${SFML_REST})
+endif()

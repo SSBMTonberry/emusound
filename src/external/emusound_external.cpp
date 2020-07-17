@@ -19,10 +19,18 @@
     #include "../../include/external/dr_wav.h" /* Enables WAV decoding. */
 #endif
 
+//USE_OGG has logic in two places define/undef as a workaround for Windows (MSVC) compilation error
 #ifdef USE_OGG
-    //#define STB_VORBIS_IMPLEMENTATION
+    #define STB_VORBIS_HEADER_ONLY
     #include "../../include/external/stb_vorbis.h"
 #endif
 
 #define MINIAUDIO_IMPLEMENTATION
 #include "../../include/external/emusound_external.h"
+
+//USE_OGG has logic in two places define/undef as a workaround for Windows (MSVC) compilation error
+#ifdef USE_OGG
+//#define STB_VORBIS_IMPLEMENTATION
+    #undef STB_VORBIS_HEADER_ONLY
+    #include "../../include/external/stb_vorbis.h"
+#endif

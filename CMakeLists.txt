@@ -48,6 +48,8 @@ endif()
 set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
 set(SFML_BUILD_AUDIO OFF)
 
+include_directories(${PROJECT_SOURCE_DIR}/external_libs/source/sfml/include)
+
 if(DEBUG)
     message("Adding debug submodules")
     add_subdirectory(${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/cmake-build-debug)
