@@ -4,8 +4,8 @@ project(emusound)
 set(CMAKE_CXX_STANDARD 17)
 
 set(PROJECT_VERSION_MAJOR 0)
-set(PROJECT_VERSION_MINOR 0)
-set(PROJECT_VERSION_PATCH 1)
+set(PROJECT_VERSION_MINOR 9)
+set(PROJECT_VERSION_PATCH 0)
 set(CMAKE_CXX_FLAGS -DSFML_STATIC)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSFML_STATIC -DESND_DEBUG")
@@ -58,6 +58,7 @@ else()
     add_subdirectory(${PROJECT_SOURCE_DIR}/external_libs/source/sfml ${PROJECT_SOURCE_DIR}/external_libs/source/sfml/cmake-build-release)
 endif()
 
+option(CLEAR_ESND_CMAKE_CACHE "Clear CMake cache for variables. Activate if you are working on the code. Otherwise: keep it off" OFF)
 option(USE_GME_AY "Include support for AY (ZX Spectrum/Amstrad CPC)" ON)
 option(USE_GME_GBS "Include support for GBS (Nintendo Game Boy)" ON)
 option(USE_GME_GYM "Include support for GYM (Sega Genesis/Mega Drive)" ON)
@@ -73,6 +74,8 @@ option(USE_OGG "Include support for OGG/VORBIS" ON)
 option(USE_MP3 "Include support for MP3" ON)
 option(USE_WAV "Include support for WAV" ON)
 option(USE_FLAC "Include support for FLAC" ON)
+
+option(BUILD_DEMO "Build demo for emusound." ON)
 
 configure_file (
         "${PROJECT_SOURCE_DIR}/EmusoundConfig.h.in"
@@ -156,26 +159,30 @@ set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/external_libs/source/
         ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src ${PROJECT_SOURCE_DIR}/external_libs/source/sfml/include)
 
-add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
+add_library(emusound ${SOURCE_FILES} ${GME_SOURCE_FILES})
 
-add_subdirectory(demo)
+if(BUILD_DEMO)
+    message("Building demo...")
+    add_subdirectory(demo)
+endif()
 
-unset(USE_GME_AY CACHE)
-unset(USE_GME_GBS CACHE)
-unset(USE_GME_GYM CACHE)
-unset(USE_GME_HES CACHE)
-unset(USE_GME_KSS CACHE)
-unset(USE_GME_NSF CACHE)
-unset(USE_GME_NSFE CACHE)
-unset(USE_GME_SAP CACHE)
-unset(USE_GME_SPC CACHE)
-unset(USE_GME_VGM CACHE)
+if(CLEAR_ESND_CMAKE_CACHE)
+    unset(USE_GME_AY CACHE)
+    unset(USE_GME_GBS CACHE)
+    unset(USE_GME_GYM CACHE)
+    unset(USE_GME_HES CACHE)
+    unset(USE_GME_KSS CACHE)
+    unset(USE_GME_NSF CACHE)
+    unset(USE_GME_NSFE CACHE)
+    unset(USE_GME_SAP CACHE)
+    unset(USE_GME_SPC CACHE)
+    unset(USE_GME_VGM CACHE)
 
-unset(USE_OGG CACHE)
-unset(USE_MP3 CACHE)
-unset(USE_WAV CACHE)
-unset(USE_FLAC CACHE)
+    unset(USE_OGG CACHE)
+    unset(USE_MP3 CACHE)
+    unset(USE_WAV CACHE)
+    unset(USE_FLAC CACHE)
 
-unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
-unset(BUILD_TESTS CACHE) #Must clear the cache to detect changes in this variable
-unset(BUILD_DEMO CACHE)
+    unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
+    unset(BUILD_DEMO CACHE)
+endif()
