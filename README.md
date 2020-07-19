@@ -39,6 +39,9 @@ the CMake GUI application, for simplicity:
 
 ## Demo
 There is a demo-application that demonstrates the functionality in emusound.
+Even though emusound itself can be built both statically (as .lib/.a) and dynamically (as .dll / .so), the demo requires a static build
+to compile. This is controlled by the parameter `BUILD_SHARED_LIBS` in the `CMakeLists.txt`, which is off by default (in other words: static).
+
 NOTE: Press Esc/Escape if you want to exit the application.
 
 ## Libraries
