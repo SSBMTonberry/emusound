@@ -26,11 +26,22 @@ bool esnddemo::ProgramManager::initialize()
 
 void esnddemo::ProgramManager::initializeMusicStream()
 {
+    #if ESND_APPLE
+    std::string basePath = getMacApplicationFolder();
+    std::string wavPath = basePath;
+    wavPath.append("../../content/juhani_junkala/level1.wav");
+    std::string oggPath = basePath;
+    oggPath.append("../../content/juhani_junkala/level2.ogg");
+    std::string mp3Path = basePath;
+    mp3Path.append("../../content/juhani_junkala/level3.mp3");
+    std::string flacPath = basePath;
+    flacPath.append("../../content/juhani_junkala/ending.flac");
+    #else
     std::string wavPath =  "./../../content/juhani_junkala/level1.wav";
     std::string oggPath =   "./../../content/juhani_junkala/level2.ogg";
     std::string mp3Path =   "./../../content/juhani_junkala/level3.mp3";
     std::string flacPath =   "./../../content/juhani_junkala/ending.flac";
-
+    #endif
     auto wav = std::make_unique<esnd::MusicStream>("WAV ", wavPath);
     auto ogg = std::make_unique<esnd::MusicStream>("OGG ", oggPath);
     auto mp3 = std::make_unique<esnd::MusicStream>("MP3 ", mp3Path);
@@ -73,13 +84,43 @@ void esnddemo::ProgramManager::initializeMusicStream()
 
 }
 
+#if ESND_APPLE
+std::string esnddemo::ProgramManager::getMacApplicationFolder()
+{
+    char buf [1024];
+    uint32_t bufsize = 1024;
+    if(!_NSGetExecutablePath(buf, &bufsize))
+        puts(buf);
+
+    std::string path = std::string(buf);
+    std::string appPath = "emusound_demo.app/Contents/MacOS/emusound_demo";
+    return path.substr(0, path.size() - appPath.size());
+    //"/Users/robin/Projects/c++/git/emusound/cmake-build-debug/demo/emusound_demo.app/Contents/MacOS/emusound_demo"
+    //path.append("/../../../../");
+
+    //Using parent_path several times to get to the part of the .app file where we are allowed to
+    //produce a file. It is still inside the .app-file, which makes it possible to move preferences
+    //with the file itself.
+    //return path.parent_path().parent_path().parent_path();
+}
+#endif
 void esnddemo::ProgramManager::initializeEmuStream()
 {
+    #if ESND_APPLE
+    std::string basePath = getMacApplicationFolder();
+    std::string nsfePath = basePath;
+    nsfePath.append("../../content/emu_tests/blueshadow.nsfe");
+    //std::string nsfPath =   "./../../content/emu_tests/test.nsf";
+    std::string spcPath = basePath;
+    spcPath.append("../../content/emu_tests/test.spc");
+    std::string vgmPath = basePath;
+    vgmPath.append("../../content/emu_tests/test.vgm");
+    #else
     std::string nsfePath =  "./../../content/emu_tests/blueshadow.nsfe";
     //std::string nsfPath =   "./../../content/emu_tests/test.nsf";
     std::string spcPath =   "./../../content/emu_tests/test.spc";
     std::string vgmPath =   "./../../content/emu_tests/test.vgm";
-
+    #endif
     auto nsfe = std::make_unique<esnd::EmuStream>("NSFE", nsfePath);
     auto nsf = std::make_unique<esnd::EmuStream>("NSF ", (void *)file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE);
     auto spc = std::make_unique<esnd::EmuStream>("SPC ", spcPath);

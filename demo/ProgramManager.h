@@ -9,6 +9,11 @@
 #include "SFML/Graphics.hpp"
 #include "../include/emusound.h"
 #include "audio_demo_files_mapper.h"
+#include <vector>
+
+#if ESND_APPLE
+#include <mach-o/dyld.h>
+#endif
 
 namespace file = audio_demo_files_files_mapper;
 
@@ -33,6 +38,10 @@ namespace esnddemo
             void shutdown();
 
         private:
+            #if ESND_APPLE
+            std::string getMacApplicationFolder();
+            #endif
+
             void initializeImGui();
 
             void drawForms();

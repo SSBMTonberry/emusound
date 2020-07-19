@@ -7,6 +7,8 @@
 #include <mutex>
 #include "NoiseConfig.hpp"
 #include <functional>
+#include <vector>
+
 namespace esnd
 {
     namespace noisecb

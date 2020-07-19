@@ -22,6 +22,7 @@ namespace esnd
     class ISoundStream
     {
         public:
+            virtual ~ISoundStream() {};
             /*!
              * Load from file.
              *

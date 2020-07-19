@@ -8,6 +8,7 @@
 #include <mutex>
 #include "WaveformConfig.hpp"
 #include <functional>
+#include <vector>
 
 namespace esnd
 {
