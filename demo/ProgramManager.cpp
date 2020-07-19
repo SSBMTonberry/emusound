@@ -138,30 +138,7 @@ void esnddemo::ProgramManager::initializeEmuStream()
 
 void esnddemo::ProgramManager::initializeAudioManager()
 {
-    //fs::path musicPath =    "./../../content/demo/audio/music.mp3";
 
-    //fs::path buttonSfxPath =  "./../../content/demo/audio/button_sfx.wav";
-    //fs::path coinSfxPath =    "./../../content/demo/audio/coin_sfx.wav";
-    //fs::path test1NsfPath =   "./../../content/demo/audio/test_1.nsf";
-
-    //AudioManager::get()->addSoundData("music_memory", {file::_MUSIC_OGG, file::_MUSIC_OGG_SIZE}, false);
-    //AudioManager::get()->addSoundData("emu_data", {file::_TEST_2_NSF, file::_TEST_2_NSF_SIZE}, false);
-    //AudioManager::get()->createMusicFromSoundData("music_memory");
-    ////AudioManager::get()->createMusicFromPath("music_path", musicPath); //MP3 is not supported by SFML.
-    //AudioManager::get()->addSoundBuffer("button_sfx", buttonSfxPath, true);
-    //AudioManager::get()->addSoundBuffer("coin_sfx", coinSfxPath, true);
-    //AudioManager::get()->addSoundData("explosion_sfx", {file::_EXPLOSION_SFX_WAV, file::_EXPLOSION_SFX_WAV_SIZE}, true);
-    //AudioManager::get()->addSoundData("hit_sfx", {file::_HIT_SFX_WAV, file::_HIT_SFX_WAV_SIZE}, true);
-//
-    //AudioManager::get()->createEmuStream("nsf_file", test1NsfPath);
-    //AudioManager::get()->createEmuStream("nsf_sfx", file::_NSF_SFX_NSFE, file::_NSF_SFX_NSFE_SIZE);
-    //AudioManager::get()->createEmuStreamFromSoundData("emu_data");
-//
-    ////Emu generated SFX
-    //AudioManager::get()->addSoundBuffer("emu_sfx_1", AudioManager::get()->getEmuStream("nsf_sfx")->createSoundBufferForTrack(2, 0, 1500), true);
-    //AudioManager::get()->addSoundBuffer("emu_sfx_2", AudioManager::get()->getEmuStream("nsf_sfx")->createSoundBufferForTrack(3, 0, 1000), true);
-    //AudioManager::get()->addSoundBuffer("emu_sfx_3", AudioManager::get()->getEmuStream("nsf_sfx")->createSoundBufferForTrack(7, 0, 3500), true);
-    //AudioManager::get()->addSoundBuffer("emu_sfx_3_quick", AudioManager::get()->getEmuStream("nsf_sfx")->createSoundBufferForTrack(7, 0, 3500, 2.f), true);
 }
 
 void esnddemo::ProgramManager::initializeImGui()
@@ -174,10 +151,10 @@ void esnddemo::ProgramManager::initializeImGui()
 
     ImGui::SFML::Init(m_window);
     //Enable Ctrl+TAB (New in ImGui 1.63)
-    //m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; //Removed - 18.03.2019 - Disabled due to interrupting hotkeys...
+    //m_io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard; //Disabled due to interrupting hotkeys...
     m_io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleFonts;
     m_io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
-    //Enable docking (New in ImGui 1.66 WIP) - Downloaded 14.10.2018
+    //Enable docking
     m_io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     //Colors
@@ -355,13 +332,6 @@ void esnddemo::ProgramManager::drawWaveformPianoForm()
             drawWaveformPianoPart(notes[i].first, notes[i].second);
 
         }
-
-        //if(ImGui::SmallButton(fmt::format("A1# ###A1S{0}", m_pianoWaveform->getId()).c_str())) {conf->frequency = esnd::Waveform::A1_SHARP; m_pianoWaveform->refresh(); m_playPiano = true; }
-        //if(ImGui::SmallButton(fmt::format("B1###B1{0}", m_pianoWaveform->getId()).c_str())) {conf->frequency = esnd::Waveform::B1; m_pianoWaveform->refresh(); m_playPiano = true; }
-        //if(m_playPiano)
-        //    m_pianoWaveform->play();
-        //else
-        //    m_pianoWaveform->stop();
     }
     ImGui::End();
 }
@@ -446,7 +416,6 @@ void esnddemo::ProgramManager::drawNoiseForm()
         ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("Play###Playnoise{0}", noise->getId()).c_str())) noise->play(); ImGui::SameLine();
         if(ImGui::SmallButton(fmt::format("Stop###Stopnoise{0}", noise->getId()).c_str())) noise->stop(); ImGui::SameLine();
-        //if(ImGui::SmallButton(fmt::format("Send to piano###ToPiano{0}", noise->getId()).c_str())) m_pianoWaveform = noise.get(); ImGui::SameLine();
         ImGui::PushItemWidth(250);
         if(ImGui::SliderInt(fmt::format("seed###seednoise{0}", noise->getId()).c_str(),
                                 &noise->getConfig()->config.seed, min_freq, max_freq))

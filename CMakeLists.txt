@@ -48,8 +48,6 @@ endif()
 set(BUILD_SHARED_LIBS OFF) #build SFML with static libs
 set(SFML_BUILD_AUDIO OFF)
 
-include_directories(${PROJECT_SOURCE_DIR}/external_libs/source/sfml/include)
-
 if(DEBUG)
     message("Adding debug submodules")
     add_subdirectory(${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/cmake-build-debug)
@@ -80,11 +78,6 @@ configure_file (
         "${PROJECT_SOURCE_DIR}/EmusoundConfig.h.in"
         "${PROJECT_SOURCE_DIR}/include/EmusoundConfig.h"
 )
-
-#configure_file(
-#        "${PROJECT_SOURCE_DIR}/external_libs/source/caudio/CMake/Templates/cAudioBuildSettings.h.in"
-#        "${PROJECT_SOURCE_DIR}/external_libs/source/caudio/cAudio/include/cAudioBuildSettings.h"
-#)
 
 if(USE_GME_AY)
     set(GME_AY_SOURCE ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Apu.cpp ${PROJECT_SOURCE_DIR}/external_libs/source/gme/Ay_Cpu.cpp
@@ -161,7 +154,8 @@ set(SOURCE_FILES include/audio/ISoundStream.h src/data/EmuTrackInfo.cpp include/
         include/audio/Noise.cpp include/audio/Noise.h include/external/dr_mp3.h include/external/dr_flac.h include/external/stb_vorbis.h include/audio/MusicStream.cpp include/audio/MusicStream.h include/audio/MusicConfig.hpp)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/external/libgme/ ${PROJECT_SOURCE_DIR}/include/ ${PROJECT_SOURCE_DIR}/external_libs/source/
-        ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src)
+        ${PROJECT_SOURCE_DIR}/external_libs/source/pmgui/src ${PROJECT_SOURCE_DIR}/external_libs/source/sfml/include)
+
 add_library(emusound STATIC ${SOURCE_FILES} ${GME_SOURCE_FILES})
 
 add_subdirectory(demo)

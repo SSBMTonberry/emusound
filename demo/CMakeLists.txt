@@ -3,37 +3,11 @@ project(emusound_demo)
 
 set(CMAKE_CXX_STANDARD 17)
 
-#set(GME_SOURCE_FILES ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ay_Apu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ay_Cpu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ay_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Blip_Buffer.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Classic_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Data_Reader.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Dual_Resampler.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Effects_Buffer.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Fir_Resampler.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Gb_Apu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Gb_Cpu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Gb_Oscs.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Gbs_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/gme.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Gme_File.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Gym_Emu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Hes_Apu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Hes_Cpu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Hes_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Kss_Cpu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Kss_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Kss_Scc_Apu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/M3u_Playlist.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Multi_Buffer.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Music_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nes_Apu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nes_Cpu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nes_Fme7_Apu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nes_Namco_Apu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nes_Oscs.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nes_Vrc6_Apu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nsf_Emu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Nsfe_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Sap_Apu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Sap_Cpu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Sap_Emu.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Sms_Apu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Snes_Spc.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Spc_Cpu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Spc_Dsp.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Spc_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Spc_Filter.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Vgm_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Vgm_Emu_Impl.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2413_Emu.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2612_GENS.cpp
-#        ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2612_MAME.cpp ${PROJECT_SOURCE_DIR}/../external_libs/source/gme/Ym2612_Nuked.cpp)
-
 if(ESND_LINUX)
     message("It's linux")
-    #set(SFML_DEPENDENCIES jpeg X11 Xrandr freetype xcb X11-xcb xcb-randr xcb-image GL FLAC ogg vorbis vorbisenc vorbisfile openal pthread )
     set(SFML_DEPENDENCIES jpeg X11 Xrandr freetype xcb X11-xcb xcb-randr xcb-image GL)
     set(SFML_REST udev) #libudev
-elseif(ESND_WIN32)
+elseif(ESND_WINDOWS)
     if(ESND_MSVC)
         message("USING MSVC")
 
@@ -43,19 +17,8 @@ elseif(ESND_WIN32)
             set(PATH_SFML_DEPEND ${PROJECT_SOURCE_DIR}/external_libs/libs/win/release/msvc/sfml)
         endif()
         set(SFML_DEPENDENCIES opengl32.lib winmm.lib gdi32.lib ws2_32.lib)
-        #set(SFML_DEPENDENCIES opengl32.lib winmm.lib gdi32.lib ${PATH_SFML_DEPEND}/freetype.lib ${PATH_SFML_DEPEND}/openal32.lib ${PATH_SFML_DEPEND}/flac.lib ${PATH_SFML_DEPEND}/vorbisenc.lib ${PATH_SFML_DEPEND}/vorbisfile.lib ${PATH_SFML_DEPEND}/vorbis.lib ${PATH_SFML_DEPEND}/ogg.lib ws2_32.lib )
-        #set(SFML_DEPENDENCIES  ${PATH_SFML_DEPEND}/freetype.lib ${PATH_SFML_DEPEND}/openal32.lib ${PATH_SFML_DEPEND}/flac.lib ${PATH_SFML_DEPEND}/vorbisenc.lib ${PATH_SFML_DEPEND}/vorbisfile.lib ${PATH_SFML_DEPEND}/vorbis.lib ${PATH_SFML_DEPEND}/ogg.lib ws2_32.lib )
-        #set(SFML_DEPEND_2 opengl32 winmm gdi32 )
     else()
-        #message("USING MINGW")
-        #if(DEBUG)
-        #    set(PATH_SFML_DEPEND ${PROJECT_SOURCE_DIR}/external_libs/libs/win/debug/mingw/sfml)
-        #elseif(RELEASE)
-        #    set(PATH_SFML_DEPEND ${PROJECT_SOURCE_DIR}/external_libs/libs/win/release/mingw/sfml)
-        #endif()
-        #message("PATH: " ${PATH_SFML_DEPEND})
-        #set(SFML_DEPENDENCIES ${PATH_SFML_DEPEND}/libfreetype.a ${PATH_SFML_DEPEND}/libFLAC.a ${PATH_SFML_DEPEND}/libogg.a ${PATH_SFML_DEPEND}/libopenal32.a ${PATH_SFML_DEPEND}/libvorbis.a ${PATH_SFML_DEPEND}/libvorbisenc.a ${PATH_SFML_DEPEND}/libvorbisfile.a)
-        #set(SFML_DEPEND_2 opengl32 winmm gdi32 freetype jpeg)
+        # No support for other compilers for Windows.
     endif()
 elseif(ESND_APPLE)
     message("USING CLANG!")
@@ -66,14 +29,16 @@ endif()
 
 set(DEMO_SOURCE_FILES main.cpp ProgramManager.cpp ProgramManager.h) #EmuAudioSource.cpp EmuAudioSource.h miniaudio.h)
 
-include_directories(../external_libs/include ../external_libs/include/libgme ../external_libs/source/pmgui/src)
+message(NOTICE "Source dir: ${PROJECT_SOURCE_DIR}")
+
+include_directories(${PROJECT_SOURCE_DIR}../external_libs/include ${PROJECT_SOURCE_DIR}../external_libs/include/libgme
+        ${PROJECT_SOURCE_DIR}../external_libs/source/pmgui/src ${PROJECT_SOURCE_DIR}../external_libs/source/sfml/include)
 
 add_executable(emusound_demo ${DEMO_SOURCE_FILES})
 
-#message("Brolo: ${PROJECT_SOURCE_DIR}/../external_libs/lib/linux/libsoloud-s-d.a")
 if(ESND_LINUX)
     target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system pthread dl ${SFML_DEPENDENCIES} ${SFML_REST})
-elseif(ESND_WIN32)
+elseif(ESND_WINDOWS)
     target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system ${SFML_DEPENDENCIES} ${SFML_REST})
 elseif(ESND_APPLE)
     target_link_libraries(emusound_demo emusound pmgui sfml-graphics sfml-window sfml-system pthread dl ${SFML_DEPENDENCIES} ${SFML_REST})
