@@ -186,3 +186,5 @@ if(CLEAR_ESND_CMAKE_CACHE)
     unset(BUILD_SHARED_LIBS CACHE) #Must clear the cache to detect changes in this variable
     unset(BUILD_DEMO CACHE)
 endif()
+
+unset(CLEAR_ESND_CMAKE_CACHE CACHE)
