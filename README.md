@@ -10,7 +10,7 @@ There is also support for generating waveform sounds in the format of
 square, sine, triangle or sawtooth. You can also generate noise sounds.
 
 Emusound has no external dependencies you need to carry around, and can easily be
-statically buildt in to your game executable.
+statically built in to your game executable, without any need for an external .dll-file.
 
 ## Supported file types for playback
 
