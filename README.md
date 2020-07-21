@@ -12,6 +12,10 @@ square, sine, triangle or sawtooth. You can also generate noise sounds.
 Emusound has no external dependencies you need to carry around, and can easily be
 statically built in to your game executable, without any need for an external .dll-file.
 
+Sounds can be read from files or directly from memory. The files read from memory in the `demo`
+has been embedded by using [f2src](https://github.com/SSBMTonberry/f2src) to generate source files
+with file data.
+
 ## Supported file types for playback
 
 ### Consoles
