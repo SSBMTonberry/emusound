@@ -96,7 +96,7 @@ this library possible!
 
 These are:
 - [miniaudio](https://github.com/dr-soft/miniaudio) - For playing audio / communicating with audio driver.
-- [Game_Music_Emu](http://blargg.8bitalley.com/libs/audio.html#Game_Music_Emu) - Used for emulating the sound chip of each retro console.
+- [Game_Music_Emu](http://blargg.8bitalley.com/libs/audio.html#Game_Music_Emu) - Used for emulating the sound chip of each retro console. This library is LGPL-licensed, but I got permission to use it under a more permissive license.
 
 Used for the demo application:
 - [SFML](https://github.com/SFML/SFML) - For sound streaming, window, clipboard and displaying graphics.
