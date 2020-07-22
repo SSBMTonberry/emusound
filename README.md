@@ -45,8 +45,7 @@ the CMake GUI application, for simplicity:
 
 ## Compiling
 Emusound uses CMake for compilation, and should be straightforward to compile on all platforms. Either open the CMakeLists.txt in CMake GUI, 
-or use the simple `cmake CMakeLists.txt` command in the root folder of this project. 
-Windows, Linux and Mac OSX are all supported.
+or use the simple `cmake CMakeLists.txt` command in the root folder of this project. Alternatively you can also open the project in an IDE or code editor like Visual Studio Code and compile from there. Windows, Linux and Mac OSX are all supported.
 
 Before compiling, you'll have to get some submodules to be able to compile the demo. 
 The command for this should be `git submodule update --init --recursive`.
