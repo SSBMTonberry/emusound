@@ -43,8 +43,16 @@ the CMake GUI application, for simplicity:
 
 ![alt text](https://github.com/SSBMTonberry/emusound/blob/master/images/emusound_01.png "Emusound CMake GUI") 
 
+## Compiling
+Emusound uses CMake for compilation, and should be straightforward to compile on all platforms. Either open the CMakeLists.txt in CMake GUI, 
+or use the simple `cmake CMakeLists.txt` command in the root folder of this project. 
+Windows, Linux and Mac OSX are all supported.
+
+Before compiling, you'll have to get some submodules to be able to compile the demo. 
+The command for this should be `git submodule update --init --recursive`.
+
 ## Demo
-There is a demo-application that demonstrates the functionality in emusound.
+There is a demo-application that demonstrates the functionality in Emusound.
 Even though emusound itself can be built both statically (as .lib/.a) and dynamically (as .dll / .so), the demo requires a static build
 to compile. This is controlled by the parameter `BUILD_SHARED_LIBS` in the `CMakeLists.txt`, which is off by default (in other words: static).
 
